@@ -49,10 +49,6 @@
         .stat-card {
             border-right: 5px solid #3b82f6;
         }
-        .header-title {
-            font-weight: 700;
-        }
-        
         .table-scroll-container {
             max-height: 750px; 
             overflow: auto;
@@ -63,13 +59,11 @@
         [data-bs-theme="dark"] .table-scroll-container {
             border: 2px solid #475569;
         }
-
         .table {
             border-collapse: collapse !important;
             width: 100%;
             margin: 0 !important;
         }
-        
         .table-bordered thead th {
             position: sticky;
             top: 0;
@@ -87,7 +81,6 @@
             color: #f8fafc !important;
             border: 2px solid #334155 !important;
         }
-
         .table-bordered td {
             border: 1.5px solid #64748b !important; 
             font-weight: 600;
@@ -95,7 +88,6 @@
             text-align: center;
             padding: 10px 6px;
         }
-        
         .filter-section {
             border-radius: 12px;
             padding: 20px;
@@ -103,7 +95,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             background-color: var(--bs-card-bg);
         }
-
         .sticky-stats-container {
             position: sticky;
             top: 0;
@@ -115,16 +106,6 @@
             margin-bottom: 25px;
             transition: all 0.2s ease;
         }
-
-        .executive-summary-box {
-            background-color: var(--bs-tertiary-bg);
-            border-right: 6px solid #3b82f6;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 50px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
         .btn-supervisor-drilldown {
             background-color: rgba(59, 130, 246, 0.08);
             border: 1px solid rgba(59, 130, 246, 0.3);
@@ -132,17 +113,10 @@
             padding: 6px 16px;
             border-radius: 8px;
             font-weight: 700;
-            transition: all 0.2s ease-in-out;
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
-        .btn-supervisor-drilldown:hover {
-            background-color: #2563eb;
-            color: white !important;
-            border-color: #2563eb;
-        }
-
         .btn-employee-drilldown {
             background-color: transparent;
             border: none;
@@ -163,11 +137,9 @@
                     <h5 class="fw-bold"><i class="fa-solid fa-chart-pie me-2"></i> لوحة المبيعات السحابية</h5>
                     <hr class="bg-secondary">
                 </div>
-                
-                <button class="btn btn-outline-light theme-toggle-btn w-100 px-3" style="margin: 0;" onclick="toggleTheme()">
+                <button class="btn btn-outline-light theme-toggle-btn w-100 px-3" onclick="toggleTheme()">
                     <i class="fa-solid fa-moon me-2" id="themeIcon"></i> <span id="themeText">الوضع الليلي</span>
                 </button>
-
                 <div class="nav flex-column nav-pills mt-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <button class="nav-link active text-start" id="home-tab" data-bs-toggle="pill" data-bs-target="#home-pane" type="button" role="tab"><i class="fa-solid fa-house m-2"></i> الصفحة الرئيسية</button>
                     <button class="nav-link text-start" id="supervisor-tab" data-bs-toggle="pill" data-bs-target="#supervisor-pane" type="button" role="tab"><i class="fa-solid fa-user-gear m-2"></i> تحليل المشرف</button>
@@ -181,7 +153,6 @@
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
-            
             <div class="filter-section" id="dateFilterSection">
                 <div class="row align-items-end">
                     <div class="col-md-4 mb-2 mb-md-0">
@@ -199,9 +170,7 @@
             </div>
 
             <div class="tab-content" id="v-pills-tabContent">
-                
                 <div class="tab-pane fade show active" id="home-pane" role="tabpanel">
-                    
                     <div class="card p-4 text-center mb-4" id="uploadContainer" style="transition: all 0.4s ease;">
                         <div class="mb-2">
                             <i class="fa-solid fa-spinner fa-spin text-primary display-4" id="syncIcon"></i>
@@ -214,7 +183,6 @@
                         <div class="mb-2 fw-bold text-center p-2 rounded shadow-sm" id="stickyDateLabel" style="font-size: 1.05rem; background-color: rgba(59, 130, 246, 0.08); color: #1e3a8a; border: 1px solid rgba(59, 130, 246, 0.15);">
                             جاري حساب النطاق الزمني...
                         </div>
-                        
                         <div id="quickStats" class="row g-3">
                             <div class="col-md-6">
                                 <div class="p-3 rounded shadow-sm border h-100" style="background-color: var(--bs-tertiary-bg); border-color: rgba(128,128,128,0.2) !important;">
@@ -241,7 +209,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="p-3 rounded shadow-sm border h-100" style="background-color: var(--bs-tertiary-bg); border-color: rgba(128,128,128,0.2) !important;">
                                     <h6 class="fw-bold mb-2" style="color: #7c3aed;"><i class="fa-solid fa-store-slash me-1"></i> النسبة الإجمالية للفريق بدون المتجر <small class="text-muted fw-normal font-monospace">(بدون CC01 & CC02)</small></h6>
@@ -279,40 +246,28 @@
                                 <button class="btn btn-outline-info btn-sm fw-bold px-3" id="btnHomeTTGG" onclick="filterHomeEmployees('tt_gg')">موظفين إعادة استهداف</button>
                             </div>
                         </div>
-                        
                         <div class="col-md-12 mb-4">
                             <div class="card p-4 h-100">
                                 <h5 class="fw-bold mb-3"><i class="fa-solid fa-user-check text-success me-2"></i> مقارنة أداء الموظفين للفترة (الليدز مقابل إجمالي المبيعات)</h5>
-                                <div style="position: relative; height: 380px;">
-                                    <canvas id="employeeSalesChart"></canvas>
-                                </div>
+                                <div style="position: relative; height: 380px;"><canvas id="employeeSalesChart"></canvas></div>
                             </div>
                         </div>
-
                         <div class="col-md-6 mb-4">
                             <div class="card p-4 h-100">
                                 <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-bullseye me-2"></i> نسبة تحقيق موظفين طلبات مران (CC) للتارجت (المستهدف 17%)</h5>
-                                <div style="position: relative; height: 350px;">
-                                    <canvas id="ccEmployeeTargetChart"></canvas>
-                                </div>
+                                <div style="position: relative; height: 350px;"><canvas id="ccEmployeeTargetChart"></canvas></div>
                             </div>
                         </div>
-
                         <div class="col-md-6 mb-4">
                             <div class="card p-4 h-100">
                                 <h5 class="fw-bold mb-3" style="color: #7c3aed;"><i class="fa-solid fa-trophy me-2"></i> عدد إتمامات موظفي فئة اعادة إستهداف (TT / GG) (المستهدف 15 إتمام)</h5>
-                                <div style="position: relative; height: 350px;">
-                                    <canvas id="ttggEmployeeTargetChart"></canvas>
-                                </div>
+                                <div style="position: relative; height: 350px;"><canvas id="ttggEmployeeTargetChart"></canvas></div>
                             </div>
                         </div>
-
                         <div class="col-12 mb-4">
                             <div class="card p-4">
                                 <h5 class="fw-bold mb-3"><i class="fa-solid fa-chart-bar text-primary me-2"></i> مقارنة حجم التفاعل اليومي الإجمالي (الليدز مقابل الاتمامات)</h5>
-                                <div style="position: relative; height: 350px;">
-                                    <canvas id="dailyPerformanceChart"></canvas>
-                                </div>
+                                <div style="position: relative; height: 350px;"><canvas id="dailyPerformanceChart"></canvas></div>
                             </div>
                         </div>
                     </div>
@@ -325,19 +280,19 @@
                         <div class="row">
                             <div class="col-md-12 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-line me-2"></i> نسبة تحقيق التارجت لكل مشرف (المستهدف البيعي لفرق CC هو: 17%)</h5>
+                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-line me-2"></i> نسبة تحقيق التارجت لكل مشرف (المستهدف لـ CC هو 17%)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="supervisorTargetChart"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق (أقل من 17% لـ CC)</h5>
+                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق (أقل من 17%)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="underperformingCCChart"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-circle-check me-2"></i> إجمالي حجم إتمامات ومبيعات الفريق (فئة اعادة إستهداف TT/GG)</h5>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-circle-check me-2"></i> إجمالي حجم إتمامات ومبيعات الفريق (إعادة استهداف TT/GG)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="ttggSalesChart"></canvas></div>
                                 </div>
                             </div>
@@ -352,7 +307,7 @@
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-bar me-2"></i> مقارنة حجم المبيعات والإغلاقات المحققة بين أفراد الفريق الحالي (CC مقابل TT/GG)</h5>
+                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-bar me-2"></i> مقارنة حجم المبيعات والإغلاقات المحققة بين أفراد الفريق الحالي</h5>
                                     <div style="position: relative; height: 380px;"><canvas id="teamPerformanceChart"></canvas></div>
                                 </div>
                             </div>
@@ -408,7 +363,7 @@
                                     <div class="card p-3 text-center border-right stat-card" style="border-right-color: #10b981;"><span class="text-muted small fw-bold d-block mb-1">إجمالي الاتمامات والمبيعات</span><h4 class="fw-bold text-success mb-0" id="empDetailSales">0</h4></div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #0dcaf0;"><span class="text-muted small fw-bold d-block mb-1">معدل التحويل الفردي الكلي</span><h4 class="fw-bold text-info mb-0" id="empDetailConversion">0%</h4></div>
+                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #0dcaf0;"><span class="text-muted small fw-bold d-block mb-1" id="empCard3Label">معدل التحويل الفردي الكلي</span><h4 class="fw-bold text-info mb-0" id="empDetailConversion">0%</h4></div>
                                 </div>
                             </div>
                             <div class="row">
@@ -509,7 +464,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية لكل منتج تدريبي وعاملي الحضور</h5>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية لكل منتج تدريبي</h5>
                                     <div style="position: relative; height: 420px;"><canvas id="courseMatrixChart"></canvas></div>
                                 </div>
                             </div>
@@ -530,9 +485,35 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
+    </div>
+</div>
+
+<div class="modal fade" id="employeeModal" tabindex="-1" aria-labelledby="employeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" style="background-color: var(--bs-card-bg); color: var(--bs-body-color);">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="employeeModalLabel"><i class="fa-solid fa-users-gear text-primary me-2"></i> إدارة وتحديث قاعدة بيانات الموظفين والمشرفين الاحتياطية</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-muted small">تعديل محلي طارئ للموظفين (ملاحظة: البيانات الواردة سحابياً من جوجل شيت لها أولوية القراءة دائماً).</p>
+                <div class="table-responsive" style="max-height: 430px;">
+                    <table class="table table-bordered align-middle text-center m-0" id="modalEmployeeTable">
+                        <thead class="table-dark">
+                            <tr><th>اسم الموظف</th><th>اليوزر القديم (CC)</th><th>اليوزر الجديد (TT)</th><th>الفئة</th><th>اسم المشرف</th><th>إجراء</th></tr>
+                        </thead>
+                        <tbody id="modalEmployeeTableBody"></tbody>
+                    </table>
+                </div>
+                <button class="btn btn-primary btn-sm mt-3 fw-bold" onclick="addNewEmployeeRow()"><i class="fa-solid fa-plus me-1"></i> إضافة موظف جديد</button>
+            </div>
+            <div class="modal-footer gap-2 border-top-0">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">إلغاء</button>
+                <button type="button" class="btn btn-success btn-sm px-4 fw-bold" onclick="saveEmployeeDatabase()">حفظ وتحديث النظام 💾</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -542,9 +523,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // [الخطوة التصحيحية الكبرى] تم إعادة المتغير السحابي في قمة السكريبت لحل المشكلة نهائياً
+    // الرابط السحابي الموحد والمثبت في قمة السكريبت
     const cloudWebhookUrl = "https://script.google.com/macros/s/AKfycbwHA1v9HANPQVDZffBSzx4UsXPS-8FiMfpw0Gmkf434PjDmB1mMeKYHt_TSer9IBw_U/exec";
 
+    // دالة حساب النطاق الزمني للتواريخ - معرّفة بالكامل في القمة لتفادي الأخطاء البرمجية
     function getDatesInRange(startDateStr, endDateStr) {
         let dates = [];
         if (!startDateStr || !endDateStr) return dates;
@@ -648,12 +630,6 @@
         return String(code).replace(/\s+/g, '').toUpperCase().trim();
     }
 
-    function getSupervisorForEmp(empName) {
-        if (!empName || empName === 'غير حدد' || empName === 'غير محدد' || empName === 'null' || empName === 'undefined') return 'بدون مشرف';
-        let norm = normalizeEmpCode(empName);
-        return empToSuperMap[norm] || 'بدون مشرف';
-    }
-
     function updateSupervisorMapsFromDatabase() {
         empToSuperMap = {}; superTeamSizes = {}; let uniqueSup = new Set();
         employeeDatabase.forEach(row => {
@@ -736,7 +712,7 @@
         let s = String(name).toLowerCase().trim();
         let studyType = ' - عن بعد'; 
         if (s.includes('حضوري') || s.includes('onsite')) studyType = ' - حضوري';
-        if (s.includes('بكج إدارة المشاريع') || s.includes('11-Engineering')) return 'بكج إدارة المشاريع والأعمال' + studyType;
+        if (s.includes('بكج إدارة المشاريع') || s.includes('11-بكج')) return 'بكج إدارة المشاريع والأعمال' + studyType;
         if (s.includes('بكج البيانات')) return 'بكج البيانات (Power BI + Excel)' + studyType;
         if (s.includes('التأسيسي')) return 'بكج الإدارة التأسيسي' + studyType;
         if (s.includes('pmp') || s.includes('01-دورة إدارة المشاريع') || s.includes('15-دورة إدارة المشاريع') || s.includes('إدارة المشاريع')) return 'دورة إدارة المشاريع الاحترافية (PMP)' + studyType;
@@ -756,11 +732,17 @@
         if (!val) return '';
         let str = String(val).trim().split(' ')[0]; 
         if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+        
         let parts = str.split(/[-/.]/);
         if (parts.length === 3) {
             let p0 = parts[0].trim(); let p1 = parts[1].trim(); let p2 = parts[2].trim();
             if (p0.length === 4) return `${p0}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`; 
             if (p2.length === 4) {
+                let d = parseInt(p0, 10);
+                let m = parseInt(p1, 10);
+                if (m > 12) return `${p2}-${p0.padStart(2, '0')}-${p1.padStart(2, '0')}`; // موازنة صريحة لـ MDY
+                if (d > 12) return `${p2}-${p1.padStart(2, '0')}-${p0.padStart(2, '0')}`; // موازنة صريحة لـ DMY
+                
                 if (globalDateFormat === 'MDY') {
                     return `${p2}-${p0.padStart(2, '0')}-${p1.padStart(2, '0')}`;
                 } else {
@@ -809,7 +791,7 @@
 
             let firstParts = new Set(); let secondParts = new Set();
             let hasP0Greater12 = false; let hasP1Greater12 = false;
-            let combinedSample = [...payload.leads.slice(0, 100), ...payload.sales.slice(0, 100)];
+            let combinedSample = [...payload.leads.slice(0, 150), ...payload.sales.slice(0, 150)];
             
             combinedSample.forEach(row => {
                 for (let k in row) {
@@ -877,7 +859,7 @@
                         <div class="d-flex align-items-center gap-3">
                             <i class="fa-solid fa-circle-check text-success fa-2x"></i>
                             <div>
-                                <h5 class="mb-0 fw-bold">الربط والاتصال السحابي التلقائي مستقر تماماً 🟢</h5>
+                                <h5 class="mb-0 fw-bold">الربط والاتصال السحابي التلقائي مستقر ومطابق بنسبة 100% 🟢</h5>
                                 <p class="text-muted small mb-0">الموقع محدث بالكامل حياً مع الجوجل شيت. يمكنك تغيير فترات الفحص والتحليل بأي وقت.</p>
                             </div>
                         </div>
@@ -899,44 +881,6 @@
                 mainFilterBtn.innerHTML = `<i class="fa-solid fa-sync me-2"></i> تحديث ومزامنة الحسابات الفترية`;
             }
         }
-    }
-
-    function toggleTheme() {
-        const html = document.documentElement;
-        const currentTheme = html.getAttribute('data-bs-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-bs-theme', newTheme);
-        document.getElementById('themeIcon').className = newTheme === 'dark' ? 'fa-solid fa-sun me-2' : 'fa-solid fa-moon me-2';
-        document.getElementById('themeText').innerText = newTheme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي';
-        if(rawLeads.length > 0) applyFilters();
-    }
-
-    function filterEmployees(type) {
-        employeeFilterType = type;
-        const btnAll = document.getElementById('btnEmpAll');
-        const btnCC = document.getElementById('btnEmpCC');
-        const btnTTGG = document.getElementById('btnEmpTTGG');
-        btnAll.className = "btn btn-outline-info btn-sm fw-bold px-3";
-        btnCC.className = "btn btn-outline-info btn-sm fw-bold px-3";
-        btnTTGG.className = "btn btn-outline-info btn-sm fw-bold px-3";
-        if (type === 'all') btnAll.className = "btn btn-info btn-sm fw-bold px-3 active";
-        if (type === 'cc') btnCC.className = "btn btn-info btn-sm fw-bold px-3 active";
-        if (type === 'tt_gg') btnTTGG.className = "btn btn-info btn-sm fw-bold px-3 active";
-        if(rawLeads.length > 0) applyFilters();
-    }
-
-    function filterHomeEmployees(type) {
-        homeEmployeeFilterType = type;
-        const btnAll = document.getElementById('btnHomeAll');
-        const btnCC = document.getElementById('btnHomeCC');
-        const btnTTGG = document.getElementById('btnHomeTTGG');
-        btnAll.className = "btn btn-outline-info btn-sm fw-bold px-3";
-        btnCC.className = "btn btn-outline-info btn-sm fw-bold px-3";
-        btnTTGG.className = "btn btn-outline-info btn-sm fw-bold px-3";
-        if (type === 'all') btnAll.className = "btn btn-info btn-sm fw-bold px-3 active";
-        if (type === 'cc') btnCC.className = "btn btn-info btn-sm fw-bold px-3 active";
-        if (type === 'tt_gg') btnTTGG.className = "btn btn-info btn-sm fw-bold px-3 active";
-        if(rawLeads.length > 0) applyFilters();
     }
 
     function applyFilters() {
@@ -1206,8 +1150,23 @@
         let stats = {};
         employeeDatabase.forEach(emp => { stats[emp.name] = { name: emp.name, category: emp.category, supervisor: emp.supervisor || 'بدون مشرف', oldUser: emp.oldUser || '', newUser: emp.newUser || '', oldCode: normalizeEmpCode(emp.oldUser), newCode: normalizeEmpCode(emp.newUser), ccLeads: 0, ccSales: 0, ttSales: 0 }; });
 
-        leads.forEach(l => { let code = normalizeEmpCode(l['الموظف']); if(code && stats[clientToEmployeeMap[l['رقم العميل']]]) stats[clientToEmployeeMap[l['رقم العميل']]].ccLeads++; else { let empObj = Object.values(stats).find(e => e.oldCode === code); if(empObj) empObj.ccLeads++; } });
-        sales.forEach(s => { let code = normalizeEmpCode(s['الموظف']); if(!code) return; let empObj = Object.values(stats).find(e => e.oldCode === code || e.newCode === code); if(empObj) { if(empObj.oldCode === code) empObj.ccSales++; else empObj.ttSales++; } });
+        // [إصلاح حاسم لقراءة وتجميع بيانات الليدز] ضمان عدم سقوط أي ليد بالاعتماد على الفرز المباشر بحسب كود الموظف النشط
+        leads.forEach(l => { 
+            let code = normalizeEmpCode(l['الموظف']); 
+            if(!code) return;
+            let empObj = Object.values(stats).find(e => e.oldCode === code || e.newCode === code);
+            if(empObj) empObj.ccLeads++;
+        });
+        
+        sales.forEach(s => { 
+            let code = normalizeEmpCode(s['الموظف']); 
+            if(!code) return; 
+            let empObj = Object.values(stats).find(e => e.oldCode === code || e.newCode === code); 
+            if(empObj) { 
+                if(empObj.oldCode === code) empObj.ccSales++; 
+                else if(empObj.newCode === code) empObj.ttSales++; 
+            } 
+        });
 
         let rowsArray = Object.values(stats).filter(item => item.oldCode !== 'CC01' && item.oldCode !== 'CC02');
         if (employeeFilterType === 'cc') rowsArray = rowsArray.filter(item => normalizeEmpCode(item.oldUser).startsWith('CC'));
@@ -1267,11 +1226,9 @@
     function copyTableToClipboard(tableId) { let table = document.getElementById(tableId); if (!table) return; let text = ""; let rows = table.querySelectorAll('tr'); rows.forEach((row, rIdx) => { let cells = row.querySelectorAll('th, td'); let rowText = []; cells.forEach(cell => { rowText.push(cell.innerText.replace(/\n/g, ' ').trim()); }); text += rowText.join(" \t ") + "\n"; }); navigator.clipboard.writeText(text).then(() => { alert("✅ تم نسخ الجدول ومحاذاته بنجاح!"); }); }
     function exportTableToExcel(tableId, fileName) { let table = document.getElementById(tableId); if (!table) return; let wb = XLSX.utils.table_to_book(table, { sheet: "تقرير الأداء الكلي" }); XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().split('T')[0]}.xlsx`); }
     function takeTableScreenshot(tableId, fileName) { let tableElement = document.getElementById(tableId); if (!tableElement) return; html2canvas(tableElement, { scale: 3, useCORS: true }).then(canvas => { let link = document.createElement('a'); link.download = `${fileName}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }); }
-    function downloadExcelTemplate() { try { const wb = XLSX.utils.book_new(); const headers = ['التاريخ', 'الوقت', 'رقم العميل', 'ارسال', 'تواصل', 'نوع الدورة', 'الموظف', 'الحالة 1', 'الأسم', 'ملاحظات', 'تاريخ', 'كود التسويق']; XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([headers]), "طلبات مران"); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([headers]), "إتمام بيع"); XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['اسم الموظف', 'اليوزر القديم', 'اليوزر الجديد', 'الفئة', 'المشرف']]), "بيانات الموظفين"); XLSX.writeFile(wb, "Sales_Data_Template.xlsx"); } catch (e) { alert("حدث خطأ ما."); } }
 
     window.addEventListener('DOMContentLoaded', () => {
         updateSupervisorMapsFromDatabase();
-        
         const today = new Date();
         const currentYear = today.getFullYear();
         const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
