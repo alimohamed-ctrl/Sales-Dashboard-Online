@@ -512,7 +512,6 @@
                     </div>
                 </div>
 
-                <!-- صفحة "بيانات الموظفين" المحدثة والمقسمة كلياً إلى جداول منفصلة حسب المشرف المسؤول -->
                 <div class="tab-pane fade" id="employee-db-pane" role="tabpanel">
                     <div class="card p-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -600,7 +599,7 @@
     let clientToEmployeeMap = {}; 
     let employeeFilterType = 'all'; 
     let homeEmployeeFilterType = 'all'; 
-    let globalDateFormat = 'MDY'; // متغير المراقبة لتحديد نوع الترتيب فترات الحملة تلقائياً واصلاح الخلل
+    let globalDateFormat = 'MDY'; 
 
     let employeeDatabase = [
         { name: 'آية احمد', oldUser: 'CC 35', newUser: 'TT 06', category: 'استهداف', supervisor: 'علي' },
@@ -629,13 +628,6 @@
         { name: 'مصطفي فضل', oldUser: 'CC 30', newUser: 'CC 30', category: 'رسمي', supervisor: 'خالد' }
     ];
     
-    let dailyChartInstance = null; let employeeChartInstance = null; let supervisorTargetChartInstance = null;
-    let underperformingCCChartInstance = null; let ttggSalesChartInstance = null;
-    let ccEmployeeTargetChartInstance = null; let ttggEmployeeTargetChartInstance = null;
-    let employeeMatrixChartInstance = null; let sourceMatrixChartInstance = null;
-    let statusMatrixChartInstance = null; let courseMatrixChartInstance = null;
-    let teamChartInstance = null; let employeeTimelineChartInstance = null; 
-
     function normalizeEmpCode(code) {
         if (!code) return '';
         return String(code).replace(/\s+/g, '').toUpperCase().trim();
@@ -667,7 +659,6 @@
         });
     }
 
-    // بناء جداول الموظفين وتقسيمها ديناميكياً لكل مشرف ببيانات فريقه المستقلة
     function renderCloudEmployeeTable() {
         const container = document.getElementById('cloudEmployeeTablesContainer');
         if (!container) return;
@@ -679,18 +670,14 @@
         let supervisorGroups = {};
         employeeDatabase.forEach(emp => {
             let supervisorName = emp.supervisor ? emp.supervisor.trim() : 'موظفين بدون مشرف محدد';
-            
-            // تطبيق منطق تحديد فئة الموظف ديناميكياً بناءً على بداية الكود (CC مقابل TT/GG) لضمان الدقة الكاملة
             let codeCheck = normalizeEmpCode(emp.newUser || emp.oldUser);
             if (!emp.category || emp.category.trim() === '') {
                 if (codeCheck.startsWith('TT') || codeCheck.startsWith('GG')) emp.category = 'إعادة استهداف';
                 else if (codeCheck.startsWith('CC')) emp.category = 'طلبات مران';
             } else {
-                // تعديل المسمى ليناسب المنطق الصارم للوحة
                 if (emp.category.includes('استهداف')) emp.category = 'إعادة استهداف';
                 else if (emp.category.includes('مران') || emp.category.includes('رسمي')) emp.category = 'طلبات مران';
             }
-
             if (!supervisorGroups[supervisorName]) supervisorGroups[supervisorName] = [];
             supervisorGroups[supervisorName].push(emp);
         });
@@ -717,7 +704,7 @@
                                         <td class="font-monospace fw-bold text-primary">${emp.oldUser || '---'}</td>
                                         <td class="font-monospace fw-bold" style="color: #7c3aed;">${emp.newUser || '---'}</td>
                                         <td>
-                                            <span class="badge ${emp.category.includes('استهداف') ? 'bg-purple text-wrap' : 'bg-primary'} fs-6 px-3" style="${emp.category.includes('استهداف') ? 'background-color: #7c3aed;' : ''}">
+                                            <span class="badge bg-primary fs-6 px-3" style="${emp.category.includes('إعادة استهداف') ? 'background-color: #7c3aed !important;' : ''}">
                                                 ${emp.category}
                                             </span>
                                         </td>
@@ -762,7 +749,6 @@
             let p0 = parts[0].trim(); let p1 = parts[1].trim(); let p2 = parts[2].trim();
             if (p0.length === 4) return `${p0}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`; 
             if (p2.length === 4) {
-                // الفحص والمطابقة البرمجية الذكية بحسب نوع الملف السحابي الحالي المرصود من الفاحص التلقائي لفك تكتل يوم 6
                 if (globalDateFormat === 'MDY') {
                     return `${p2}-${p0.padStart(2, '0')}-${p1.padStart(2, '0')}`;
                 } else {
@@ -794,13 +780,12 @@
         const syncStatus = document.getElementById('syncStatus');
         const uploadContainer = document.getElementById('uploadContainer');
         
-        // إظهار علامات التحميل الدائرية والقفل الفني فور بدء معالجة التحديث السحابي بناءً على طلبك
         if (uploadContainer) {
             uploadContainer.className = "card p-4 text-center mb-4 border-start border-primary border-4 bg-body-tertiary shadow-sm";
             uploadContainer.innerHTML = `
                 <div class="mb-2"><i class="fa-solid fa-arrows-spin fa-spin text-primary display-4"></i></div>
                 <h5 class="fw-bold text-primary">جاري إعادة سحب وفحص ومزامنة البيانات حياً من السحابة...</h5>
-                <div class="small fw-bold text-secondary text-animated">يرجى الانتظار لحين تهيئة وتصحيح توزيع الرسوم البيانية والجداول الكلية.</div>
+                <div class="small fw-bold text-secondary">يرجى الانتظار لحين تهيئة وتصحيح توزيع الرسوم البيانية والجداول الكلية.</div>
             `;
         }
 
@@ -810,7 +795,6 @@
             const payload = await response.json();
             if (!payload.leads || !payload.sales) throw new Error("بنية تبويبات الشيت غير مطابقة للتوقعات الأساسية.");
 
-            // خوارزمية ذكية لاكتشاف صيغة ترتيب الأيام والشهور في الشيت تلقائياً لمنع التراكم في يوم واحد
             let firstParts = new Set(); let secondParts = new Set();
             let hasP0Greater12 = false; let hasP1Greater12 = false;
             let combinedSample = [...payload.leads.slice(0, 100), ...payload.sales.slice(0, 100)];
@@ -833,10 +817,9 @@
             if (hasP0Greater12) globalDateFormat = 'DMY';
             else if (hasP1Greater12) globalDateFormat = 'MDY';
             else {
-                // إذا كانت كافة البيانات تقع في أول 12 يوماً من الشهر، يتم التحقق برمجياً من الجزء المتغير
                 if (firstParts.size === 1 && secondParts.size > 1) globalDateFormat = 'MDY';
                 else if (secondParts.size === 1 && firstParts.size > 1) globalDateFormat = 'DMY';
-                else globalDateFormat = 'MDY'; // التنسيق الافتراضي الأكثر ملاءمة لخلل الحسابات السابق
+                else globalDateFormat = 'MDY'; 
             }
 
             rawLeads = cleanSheetData(payload.leads);
@@ -954,6 +937,21 @@
         renderEmployeeMatrix(filteredLeads, filteredSales, sortedDates);
     }
 
+    // [إصلاح هندسي] تم إعادة هذه الدالة الحيوية التي تسببت في توقف الرسوم البيانية والموقع بالكامل
+    function getDatesInRange(startDateStr, endDateStr) {
+        let dates = []; let startParts = startDateStr.split('-'); let endParts = endDateStr.split('-');
+        let start = new Date(Date.UTC(Number(startParts[0]), Number(startParts[1]) - 1, Number(startParts[2])));
+        let end = new Date(Date.UTC(Number(endParts[0]), Number(endParts[1]) - 1, Number(endParts[2])));
+        let current = new Date(start.getTime());
+        while (current <= end) {
+            let y = current.getUTCFullYear();
+            let m = String(current.getUTCMonth() + 1).padStart(2, '0');
+            let d = String(current.getUTCDate()).padStart(2, '0');
+            dates.push(`${y}-${m}-${d}`); current.setUTCDate(current.getUTCDate() + 1);
+        }
+        return dates;
+    }
+
     function renderHomeTargetCharts(leads, sales) {
         let empLeads = {}; let empSales = {};
         leads.forEach(l => {
@@ -968,7 +966,6 @@
         let unionEmps = Array.from(new Set([...Object.keys(empLeads), ...Object.keys(empSales)]));
         let ccData = [];
         unionEmps.forEach(emp => {
-            // تصفية فرقة CC بناءً على المنطق الصارم لبداية الكود الكودي
             if (emp.startsWith('CC')) {
                 let norm = emp.replace(/\s+/g, '').toUpperCase(); if (norm === 'CC01' || norm === 'CC02') return; 
                 let l = empLeads[emp] || 0; let s = empSales[emp] || 0;
