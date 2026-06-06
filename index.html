@@ -542,7 +542,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // 1. الدالة الأساسية لحساب نطاق التواريخ - تم وضعها في البداية المطلقة لمنع أي أخطاء تعريف في المتصفح
+    // [الخطوة التصحيحية الكبرى] تم إعادة المتغير السحابي في قمة السكريبت لحل المشكلة نهائياً
+    const cloudWebhookUrl = "https://script.google.com/macros/s/AKfycbwHA1v9HANPQVDZffBSzx4UsXPS-8FiMfpw0Gmkf434PjDmB1mMeKYHt_TSer9IBw_U/exec";
+
     function getDatesInRange(startDateStr, endDateStr) {
         let dates = [];
         if (!startDateStr || !endDateStr) return dates;
@@ -589,7 +591,6 @@
         }
     };
 
-    // إعلان وتثبيت المتغيرات الكلية والشارتات لمنع مشاكل التجميد البرمجي
     let rawLeads = [];
     let rawSales = [];
     let empToSuperMap = {}; 
@@ -683,10 +684,9 @@
 
         let supervisorGroups = {};
         employeeDatabase.forEach(emp => {
-            let supervisorName = emp.supervisor ? emp.supervisor.trim() : 'موظفين بدون مشرف مححدد';
+            let supervisorName = emp.supervisor ? emp.supervisor.trim() : 'موظفين بدون مشرف محدد';
             let codeCheck = normalizeEmpCode(emp.newUser || emp.oldUser);
             
-            // تطبيق منطق كود الموظف الصارم (CC مقابل TT/GG) بشكل مجهر أوتوماتيكي لجميع الصفوف
             if (codeCheck.startsWith('TT') || codeCheck.startsWith('GG')) emp.category = 'إعادة استهداف';
             else if (codeCheck.startsWith('CC')) emp.category = 'طلبات مران';
 
@@ -736,7 +736,7 @@
         let s = String(name).toLowerCase().trim();
         let studyType = ' - عن بعد'; 
         if (s.includes('حضوري') || s.includes('onsite')) studyType = ' - حضوري';
-        if (s.includes('بكج إدارة المشاريع') || s.includes('11-بكج')) return 'بكج إدارة المشاريع والأعمال' + studyType;
+        if (s.includes('بكج إدارة المشاريع') || s.includes('11-Engineering')) return 'بكج إدارة المشاريع والأعمال' + studyType;
         if (s.includes('بكج البيانات')) return 'بكج البيانات (Power BI + Excel)' + studyType;
         if (s.includes('التأسيسي')) return 'بكج الإدارة التأسيسي' + studyType;
         if (s.includes('pmp') || s.includes('01-دورة إدارة المشاريع') || s.includes('15-دورة إدارة المشاريع') || s.includes('إدارة المشاريع')) return 'دورة إدارة المشاريع الاحترافية (PMP)' + studyType;
@@ -790,11 +790,15 @@
 
     async function fetchDataFromCloudAuto() {
         const mainFilterBtn = document.getElementById('mainFilterBtn');
+        const uploadContainer = document.getElementById('uploadContainer');
         
-        // تفعيل شريط ومؤشر التحميل الفني عند المزامنة أو البدء لمنع التعليق الحسابي
-        if (mainFilterBtn) {
-            mainFilterBtn.disabled = true;
-            mainFilterBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري مزامنة وسحب البيانات...`;
+        if (uploadContainer) {
+            uploadContainer.className = "card p-4 text-center mb-4 border-start border-primary border-4 bg-body-tertiary shadow-sm";
+            uploadContainer.innerHTML = `
+                <div class="mb-2"><i class="fa-solid fa-arrows-spin fa-spin text-primary display-4"></i></div>
+                <h5 class="fw-bold text-primary">جاري إعادة سحب وفحص ومزامنة البيانات حياً من السحابة...</h5>
+                <div class="small fw-bold text-secondary">يرجى الانتظار لحين تهيئة وتصحيح توزيع الرسوم البيانية والجداول الكلية.</div>
+            `;
         }
 
         try {
@@ -803,7 +807,6 @@
             const payload = await response.json();
             if (!payload.leads || !payload.sales) throw new Error("بنية تبويبات الشيت غير مطابقة للتوقعات الأساسية.");
 
-            // معالجة ذكية للتحقق الفوري من صياغة ترتيب الأيام لتفادي خلل التكثيف الإحصائي
             let firstParts = new Set(); let secondParts = new Set();
             let hasP0Greater12 = false; let hasP1Greater12 = false;
             let combinedSample = [...payload.leads.slice(0, 100), ...payload.sales.slice(0, 100)];
@@ -1184,7 +1187,6 @@
         statusMatrixChartInstance = new Chart(document.getElementById('statusMatrixChart').getContext('2d'), { type: 'bar', data: { labels: rowsArray.map(r => r.status), datasets: [{ label: 'التكرار', data: rowsArray.map(r => r.total), backgroundColor: '#f59e0b' }] }, options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false } });
     }
 
-    // تحليل وبناء مصفوفة نوع الدورة
     function renderCourseMatrix(leads, sales, sortedDates) {
         let matrix = {};
         leads.forEach(l => { let course = normalizeCourseName(l['نوع الدورة']); if (!matrix[course]) matrix[course] = { totalLeads: 0, totalSales: 0 }; matrix[course].totalLeads++; });
@@ -1262,8 +1264,6 @@
     }
 
     function hideEmployeeDetails() { document.getElementById('employeeDetailView').classList.add('d-none'); document.getElementById('employeeMainView').classList.remove('d-none'); }
-    
-    // تصدير ونسخ متن الجداول لسيناريوهات مشاركة التقارير الميدانية
     function copyTableToClipboard(tableId) { let table = document.getElementById(tableId); if (!table) return; let text = ""; let rows = table.querySelectorAll('tr'); rows.forEach((row, rIdx) => { let cells = row.querySelectorAll('th, td'); let rowText = []; cells.forEach(cell => { rowText.push(cell.innerText.replace(/\n/g, ' ').trim()); }); text += rowText.join(" \t ") + "\n"; }); navigator.clipboard.writeText(text).then(() => { alert("✅ تم نسخ الجدول ومحاذاته بنجاح!"); }); }
     function exportTableToExcel(tableId, fileName) { let table = document.getElementById(tableId); if (!table) return; let wb = XLSX.utils.table_to_book(table, { sheet: "تقرير الأداء الكلي" }); XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().split('T')[0]}.xlsx`); }
     function takeTableScreenshot(tableId, fileName) { let tableElement = document.getElementById(tableId); if (!tableElement) return; html2canvas(tableElement, { scale: 3, useCORS: true }).then(canvas => { let link = document.createElement('a'); link.download = `${fileName}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }); }
@@ -1272,7 +1272,6 @@
     window.addEventListener('DOMContentLoaded', () => {
         updateSupervisorMapsFromDatabase();
         
-        // حساب وضبط النطاق التلقائي الدقيق: من يوم 1 في الشهر الحالي إلى تاريخ اليوم الحالي تماماً
         const today = new Date();
         const currentYear = today.getFullYear();
         const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
