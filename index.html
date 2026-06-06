@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحليل بيانات المبيعات - المزامنة السحابية التلقائية</title>
+    <title>لوحة تحكم مبيعات مران - المزامنة السحابية المباشرة</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -117,15 +117,25 @@
             padding: 10px 6px;
         }
         
-        .matrix-cell {
-            min-width: 135px;
-        }
         .filter-section {
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 25px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             background-color: var(--bs-card-bg);
+        }
+
+        /* حاوية التثبيت الذكية الذكية للإحصائيات الإجمالية عند السكرول */
+        .sticky-stats-container {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            background-color: var(--bs-body-bg);
+            padding-top: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px dashed rgba(59, 130, 246, 0.2);
+            margin-bottom: 25px;
+            transition: all 0.2s ease;
         }
 
         .executive-summary-box {
@@ -209,7 +219,7 @@
         <nav class="col-md-3 col-lg-2 d-md-block sidebar p-0">
             <div class="pt-4">
                 <div class="text-center mb-2 px-3">
-                    <h5 class="fw-bold"><i class="fa-solid fa-chart-pie me-2"></i> لوحة التحكم السحابية</h5>
+                    <h5 class="fw-bold"><i class="fa-solid fa-chart-pie me-2"></i> لوحة المبيعات السحابية</h5>
                     <hr class="bg-secondary">
                 </div>
                 
@@ -219,7 +229,6 @@
 
                 <div class="nav flex-column nav-pills mt-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
                     <button class="nav-link active text-start" id="home-tab" data-bs-toggle="pill" data-bs-target="#home-pane" type="button" role="tab"><i class="fa-solid fa-house m-2"></i> الصفحة الرئيسية</button>
-                    <button class="nav-link text-start" id="general-tab" data-bs-toggle="pill" data-bs-target="#general-pane" type="button" role="tab"><i class="fa-solid fa-brain m-2"></i> التحليل العام</button>
                     <button class="nav-link text-start" id="supervisor-tab" data-bs-toggle="pill" data-bs-target="#supervisor-pane" type="button" role="tab"><i class="fa-solid fa-user-gear m-2"></i> تحليل المشرف</button>
                     <button class="nav-link text-start" id="employee-tab" data-bs-toggle="pill" data-bs-target="#employee-pane" type="button" role="tab"><i class="fa-solid fa-user-tie m-2"></i> تحليل الموظف</button>
                     <button class="nav-link text-start" id="source-tab" data-bs-toggle="pill" data-bs-target="#source-pane" type="button" role="tab"><i class="fa-solid fa-bullhorn m-2"></i> تحليل السورس</button>
@@ -231,7 +240,7 @@
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
             
-            <div class="filter-section d-none" id="dateFilterSection">
+            <div class="filter-section" id="dateFilterSection">
                 <div class="row align-items-end">
                     <div class="col-md-4 mb-2 mb-md-0">
                         <label class="form-label fw-bold">من تاريخ:</label>
@@ -242,7 +251,7 @@
                         <input type="date" id="endDate" class="form-control">
                     </div>
                     <div class="col-md-4">
-                        <button class="btn btn-primary w-100" onclick="applyFilters()"><i class="fa-solid fa-sync me-2"></i> تحديث ومزامنة الحسابات</button>
+                        <button class="btn btn-primary w-100 fw-bold" onclick="applyFilters()"><i class="fa-solid fa-sync me-2"></i> تحديث ومزامنة الحسابات الفترية</button>
                     </div>
                 </div>
             </div>
@@ -250,74 +259,68 @@
             <div class="tab-content" id="v-pills-tabContent">
                 
                 <div class="tab-pane fade show active" id="home-pane" role="tabpanel">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                        <h1 class="header-title h2">المزامنة السحابية اللحظية لمبيعات مران</h1>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-primary fw-bold px-3 shadow-sm" onclick="openEmployeeModal()">
-                                <i class="fa-solid fa-users-gear me-1"></i> مراجعة هيكل الموظفين
-                            </button>
-                            <button class="btn btn-sm btn-success fw-bold px-3 shadow-sm" onclick="downloadExcelTemplate()">
-                                <i class="fa-solid fa-file-arrow-down me-1"></i> تحميل قالب البيانات (التمبلت)
-                            </button>
-                        </div>
-                    </div>
                     
-                    <div class="card p-5 text-center mb-4" id="uploadContainer" style="transition: all 0.4s ease;">
-                        <div class="mb-3">
-                            <i class="fa-solid fa-spinner fa-spin text-primary display-3" id="syncIcon"></i>
+                    <div class="card p-4 text-center mb-4" id="uploadContainer" style="transition: all 0.4s ease;">
+                        <div class="mb-2">
+                            <i class="fa-solid fa-spinner fa-spin text-primary display-4" id="syncIcon"></i>
                         </div>
-                        <h4 id="syncTitle">جاري جلب البيانات ومعالجة الحسابات رقمياً...</h4>
-                        <p class="text-muted small">يتصل النظام الآن مباشرة بسحابة جوجل لفرز وتحليل قنوات المتابعة وتتبع كفاءة السورس والفرق الحالية.</p>
-                        <div id="syncStatus" class="mt-2 small fw-bold text-secondary">الرجاء الانتظار قليلاً...</div>
+                        <h5 id="syncTitle" class="fw-bold">جاري الاتصال السحابي بجوجل شيت ومعالجة البيانات...</h5>
+                        <div id="syncStatus" class="small fw-bold text-secondary">الرجاء الانتظار ثواني معدودة...</div>
                     </div>
 
-                    <div id="quickStats" class="row d-none mb-4">
-                        <div class="col-md-6 mb-3 mb-md-0">
-                            <div class="p-3 rounded shadow-sm border h-100" style="background-color: var(--bs-tertiary-bg); border-color: rgba(128,128,128,0.2) !important;">
-                                <h6 class="fw-bold text-primary mb-3"><i class="fa-solid fa-chart-line me-1"></i> النسبة الإجمالية للفريق</h6>
-                                <div class="row g-2">
-                                    <div class="col-4">
-                                        <div class="card p-2 text-center h-100" style="border-right: 4px solid #3b82f6;">
-                                            <span class="text-muted small fw-bold d-block mb-1">إجمالي الليدز</span>
-                                            <h4 class="fw-bold text-primary mb-0" id="totalLeadsCount">0</h4>
+                    <div id="stickyStatsWrapper" class="sticky-stats-container d-none">
+                        <div class="mb-2 fw-bold text-center p-2 rounded shadow-sm" id="stickyDateLabel" style="font-size: 1.05rem; background-color: rgba(59, 130, 246, 0.08); color: #1e3a8a; border: 1px solid rgba(59, 130, 246, 0.15);">
+                            جاري حساب النطاق الزمني...
+                        </div>
+                        
+                        <div id="quickStats" class="row g-3">
+                            <div class="col-md-6">
+                                <div class="p-3 rounded shadow-sm border h-100" style="background-color: var(--bs-tertiary-bg); border-color: rgba(128,128,128,0.2) !important;">
+                                    <h6 class="fw-bold text-primary mb-2"><i class="fa-solid fa-chart-line me-1"></i> النسبة الإجمالية للفريق</h6>
+                                    <div class="row g-2">
+                                        <div class="col-4">
+                                            <div class="card p-2 text-center h-100" style="border-right: 4px solid #3b82f6;">
+                                                <span class="text-muted small fw-bold d-block mb-1">إجمالي الليدز</span>
+                                                <h4 class="fw-bold text-primary mb-0" id="totalLeadsCount">0</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="card p-2 text-center h-100" style="border-right: 4px solid #10b981;">
-                                            <span class="text-muted small fw-bold d-block mb-1">إتمامات</span>
-                                            <h4 class="fw-bold text-success mb-0" id="totalSalesCount">0</h4>
+                                        <div class="col-4">
+                                            <div class="card p-2 text-center h-100" style="border-right: 4px solid #10b981;">
+                                                <span class="text-muted small fw-bold d-block mb-1">إتمامات</span>
+                                                <h4 class="fw-bold text-success mb-0" id="totalSalesCount">0</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="card p-2 text-center h-100" style="border-right: 4px solid #64748b;">
-                                            <span class="text-muted small fw-bold d-block mb-1">معدل التحويل</span>
-                                            <h4 class="fw-bold mb-0 mt-1" id="totalConversionRate">0%</h4>
+                                        <div class="col-4">
+                                            <div class="card p-2 text-center h-100" style="border-right: 4px solid #64748b;">
+                                                <span class="text-muted small fw-bold d-block mb-1">معدل التحويل</span>
+                                                <h4 class="fw-bold mb-0 mt-1" id="totalConversionRate">0%</h4>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="p-3 rounded shadow-sm border h-100" style="background-color: var(--bs-tertiary-bg); border-color: rgba(128,128,128,0.2) !important;">
-                                <h6 class="fw-bold mb-3" style="color: #7c3aed;"><i class="fa-solid fa-store-slash me-1"></i> النسبة الإجمالية للفريق بدون المتجر <small class="text-muted fw-normal font-monospace">(بدون CC01 & CC02)</small></h6>
-                                <div class="row g-2">
-                                    <div class="col-4">
-                                        <div class="card p-2 text-center h-100" style="border-right: 4px solid #6366f1;">
-                                            <span class="text-muted small fw-bold d-block mb-1">إجمالي الليدز</span>
-                                            <h4 class="fw-bold mb-0" style="color: #6366f1;" id="cleanLeadsCount">0</h4>
+                            <div class="col-md-6">
+                                <div class="p-3 rounded shadow-sm border h-100" style="background-color: var(--bs-tertiary-bg); border-color: rgba(128,128,128,0.2) !important;">
+                                    <h6 class="fw-bold mb-2" style="color: #7c3aed;"><i class="fa-solid fa-store-slash me-1"></i> النسبة الإجمالية للفريق بدون المتجر <small class="text-muted fw-normal font-monospace">(بدون CC01 & CC02)</small></h6>
+                                    <div class="row g-2">
+                                        <div class="col-4">
+                                            <div class="card p-2 text-center h-100" style="border-right: 4px solid #6366f1;">
+                                                <span class="text-muted small fw-bold d-block mb-1">إجمالي الليدز</span>
+                                                <h4 class="fw-bold mb-0" style="color: #6366f1;" id="cleanLeadsCount">0</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="card p-2 text-center h-100" style="border-right: 4px solid #ec4899;">
-                                            <span class="text-muted small fw-bold d-block mb-1">إتمامات</span>
-                                            <h4 class="fw-bold mb-0" style="color: #ec4899;" id="cleanSalesCount">0</h4>
+                                        <div class="col-4">
+                                            <div class="card p-2 text-center h-100" style="border-right: 4px solid #ec4899;">
+                                                <span class="text-muted small fw-bold d-block mb-1">إتمامات</span>
+                                                <h4 class="fw-bold mb-0" style="color: #ec4899;" id="cleanSalesCount">0</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="card p-2 text-center h-100" style="border-right: 4px solid #64748b;">
-                                            <span class="text-muted small fw-bold d-block mb-1">معدل التحويل</span>
-                                            <h4 class="fw-bold mb-0 mt-1" id="cleanConversionRate">0%</h4>
+                                        <div class="col-4">
+                                            <div class="card p-2 text-center h-100" style="border-right: 4px solid #64748b;">
+                                                <span class="text-muted small fw-bold d-block mb-1">معدل التحويل</span>
+                                                <h4 class="fw-bold mb-0 mt-1" id="cleanConversionRate">0%</h4>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -380,19 +383,19 @@
                         <div class="row">
                             <div class="col-md-12 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-line me-2"></i> نسبة تحقيق التارجت لكل مشرف</h5>
+                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-line me-2"></i> نسبة تحقيق التارجت لكل مشرف (المستهدف البيعي هو: 17%)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="supervisorTargetChart"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق</h5>
+                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق (أقل من 17%)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="underperformingCCChart"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-circle-check me-2"></i> إجمالي حجم إتمامات ومبيعات الفريق (إعادة استهداف)</h5>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-circle-check me-2"></i> إجمالي حجم إتمامات ومبيعات الفريق (فئة اعادة إستهداف)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="ttggSalesChart"></canvas></div>
                                 </div>
                             </div>
@@ -401,13 +404,13 @@
                     <div id="supervisorDetailView" class="card p-4 d-none">
                         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                             <h4 class="fw-bold text-primary mb-0" id="supervisorDetailTitle">تحليل فريق المشرف</h4>
-                            <button class="btn btn-outline-secondary btn-sm fw-bold px-3 shadow-sm" onclick="hideSupervisorTeamDetails()">العودة للوحة العامة</button>
+                            <button class="btn btn-outline-secondary btn-sm fw-bold px-3 shadow-sm" onclick="hideSupervisorTeamDetails()">العودة للوحة العامة للمشرفين</button>
                         </div>
                         <div id="teamTableContainer" class="mb-4"></div>
                         <div class="row mb-4">
                             <div class="col-12">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-bar me-2"></i> مقارنة حجم المبيعات والإغلاقات المحققة بين أفراد الفريق</h5>
+                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-bar me-2"></i> مقارنة حجم المبيعات والإغلاقات المحققة بين أفراد الفريق الحالي (CC مقابل TT/GG)</h5>
                                     <div style="position: relative; height: 380px;"><canvas id="teamPerformanceChart"></canvas></div>
                                 </div>
                             </div>
@@ -422,13 +425,13 @@
                             <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap">
                                 <h4 class="fw-bold text-info mb-2"><i class="fa-solid fa-user-tie me-2"></i> الأداء المباشر لموظفي المبيعات</h4>
                                 <div>
-                                    <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('employeeTable')">نسخ للواتساب</button>
-                                    <button class="btn btn-success btn-sm me-2" onclick="exportTableToExcel('employeeTable', 'تحليل_أداء_الموظفين')">تحميل شيت إكسيل</button>
-                                    <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('employeeTable', 'تحليل_الموظفين')">لقطة شاشة</button>
+                                    <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('employeeTable')">نسخ كـ نص للواتساب</button>
+                                    <button class="btn btn-success btn-sm me-2" onclick="exportTableToExcel('employeeTable', 'تحليل_أداء_الموظفين_الشامل')">نسخ للاكسيل (تنزيل شيت)</button>
+                                    <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('employeeTable', 'تحليل_الموظفين_الفترة')">لقطة شاشة للواتساب</button>
                                 </div>
                             </div>
                             <div class="p-3 mb-2 rounded d-flex align-items-center gap-2 flex-wrap" style="background-color: var(--bs-tertiary-bg); border: 1px solid rgba(128,128,128,0.2);">
-                                <span class="fw-bold text-secondary me-2"><i class="fa-solid fa-filter me-1"></i> تصفية الفئة:</span>
+                                <span class="fw-bold text-secondary me-2"><i class="fa-solid fa-filter me-1"></i> تصفية الفئة (Slicers):</span>
                                 <button class="btn btn-info btn-sm fw-bold px-3 active" id="btnEmpAll" onclick="filterEmployees('all')">كل الموظفين</button>
                                 <button class="btn btn-outline-info btn-sm fw-bold px-3" id="btnEmpCC" onclick="filterEmployees('cc')">موظفين طلبات مران</button>
                                 <button class="btn btn-outline-info btn-sm fw-bold px-3" id="btnEmpTTGG" onclick="filterEmployees('tt_gg')">موظفين إعادة استهداف</button>
@@ -443,7 +446,7 @@
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                        <h5 class="fw-bold mb-3 text-info"><i class="fa-solid fa-chart-bar me-2"></i> مقارنة التحليل المرئي لأداء الموظفين</h5>
+                                        <h5 class="fw-bold mb-3 text-info"><i class="fa-solid fa-chart-bar me-2"></i> مقارنة التحليل المرئي لأداء الموظفين (إجمالي مبيعات القنوات مدمجة) للفئة المحددة</h5>
                                         <div style="position: relative; height: 380px;"><canvas id="employeeMatrixChart"></canvas></div>
                                     </div>
                                 </div>
@@ -453,32 +456,32 @@
                         <div id="employeeDetailView" class="d-none">
                             <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
                                 <h4 class="fw-bold text-info mb-0" id="employeeDetailTitle">تحليل أداء الموظف</h4>
-                                <button class="btn btn-outline-secondary btn-sm fw-bold px-3 shadow-sm" onclick="hideEmployeeDetails()">العودة للوحة العامة</button>
+                                <button class="btn btn-outline-secondary btn-sm fw-bold px-3 shadow-sm" onclick="hideEmployeeDetails()">العودة للوحة العامة للموظفين</button>
                             </div>
                             <div class="row mb-4">
                                 <div class="col-md-4 mb-3">
-                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #3b82f6;"><span class="text-muted small fw-bold d-block mb-1" id="empCard1Label">إجمالي الليدز</span><h4 class="fw-bold text-primary mb-0" id="empDetailLeads">0</h4></div>
+                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #3b82f6;"><span class="text-muted small fw-bold d-block mb-1" id="empCard1Label">إجمالي الليدز المستلمة</span><h4 class="fw-bold text-primary mb-0" id="empDetailLeads">0</h4></div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #10b981;"><span class="text-muted small fw-bold d-block mb-1">إجمالي المبيعات</span><h4 class="fw-bold text-success mb-0" id="empDetailSales">0</h4></div>
+                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #10b981;"><span class="text-muted small fw-bold d-block mb-1">إجمالي الاتمامات والمبيعات</span><h4 class="fw-bold text-success mb-0" id="empDetailSales">0</h4></div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #0dcaf0;"><span class="text-muted small fw-bold d-block mb-1" id="empCard3Label">معدل التحويل الكلي</span><h4 class="fw-bold text-info mb-0" id="empDetailConversion">0%</h4></div>
+                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #0dcaf0;"><span class="text-muted small fw-bold d-block mb-1" id="empCard3Label">معدل التحويل الفردي الكلي</span><h4 class="fw-bold text-info mb-0" id="empDetailConversion">0%</h4></div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-lg-7 mb-4">
                                     <div class="card p-4 border h-100" style="border-color: rgba(128,128,128,0.15) !important;">
-                                        <h5 class="fw-bold mb-3 text-info"><i class="fa-solid fa-chart-line me-2"></i> تتبع حجم الأداء والإنتاجية اليومية للموظف</h5>
+                                        <h5 class="fw-bold mb-3 text-info"><i class="fa-solid fa-chart-line me-2"></i> تتبع حجم الأداء والإنتاجية اليومية للموظف عبر الفترة</h5>
                                         <div style="position: relative; height: 350px;"><canvas id="employeeTimelineChart"></canvas></div>
                                     </div>
                                 </div>
                                 <div class="col-lg-5 mb-4">
                                     <div class="card p-4 border h-100" style="border-color: rgba(128,128,128,0.15) !important;">
-                                        <h5 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-tags me-2"></i> التوزيع السلوكي لحالات الليدز</h5>
+                                        <h5 class="fw-bold mb-3 text-warning"><i class="fa-solid fa-tags me-2"></i> التوزيع السلوكي لحالات الليدز (الحالة 1) للموظف</h5>
                                         <div class="table-responsive" style="max-height: 350px;">
                                             <table class="table table-bordered table-sm m-0 text-center align-middle">
-                                                <thead class="table-dark"><tr><th>الحالة البيعية</th><th>التكرار</th><th>النسبة</th></tr></thead>
+                                                <thead class="table-dark"><tr><th>الحالة البيعية للعميل</th><th>التكرار</th><th>النسبة المئوية</th></tr></thead>
                                                 <tbody id="employeeStatusTableBody"></tbody>
                                             </table>
                                         </div>
@@ -489,31 +492,13 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="general-pane" role="tabpanel">
-                    <div class="card p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-                            <h4 class="fw-bold text-primary mb-2"><i class="fa-solid fa-brain text-primary me-2"></i> تقرير التحليل العام والملخص التنفيذي والأسباب</h4>
-                            <div>
-                                <button class="btn btn-primary btn-sm me-2" onclick="copyGeneralSummary()">نسخ التقرير للواتساب</button>
-                                <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('generalAnalysisArea', 'تقرير_التحليل_العام')">لقطة شاشة</button>
-                            </div>
-                        </div>
-                        <div id="generalAnalysisArea" class="p-2">
-                            <div id="targetIndicatorArea" class="mb-4"></div>
-                            <div id="smartReportContent">
-                                <div class="text-center p-4 text-muted">جاري تحميل تقرير الفحص والذكاء التحليلي تلقائياً...</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="tab-pane fade" id="source-pane" role="tabpanel">
                     <div class="card p-4">
                         <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap">
                             <h4 class="fw-bold text-primary mb-2"><i class="fa-solid fa-table me-2"></i> الأداء التسويقي للأكواد (السورس)</h4>
                             <div>
-                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('sourceTable')">نسخ للواتساب</button>
-                                <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('sourceTable', 'تحليل_السورس')">لقطة شاشة</button>
+                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('sourceTable')">نسخ كـ نص للواتساب</button>
+                                <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('sourceTable', 'تحليل_السورس_الفترة')">لقطة شاشة للواتساب</button>
                             </div>
                         </div>
                         <div class="mb-3 text-secondary fw-bold small p-2 rounded" style="background-color: var(--bs-tertiary-bg);" id="sourcePeriodLabel"></div>
@@ -526,7 +511,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-column me-2"></i> تحليل حجم الفرص والمبيعات للمصادر الإعلانية</h5>
+                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-column me-2"></i> تحليل حجم الفرص والمبيعات للمصادر الإعلانية (الأكواد)</h5>
                                     <div style="position: relative; height: 350px;"><canvas id="sourceMatrixChart"></canvas></div>
                                 </div>
                             </div>
@@ -540,8 +525,8 @@
                         <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap">
                             <h4 class="fw-bold text-warning mb-2"><i class="fa-solid fa-tags me-2"></i> الحالات وتوزيعها المباشر</h4>
                             <div>
-                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('statusTable')">نسخ للواتساب</button>
-                                <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('statusTable', 'تحليل_الحالات')">لقطة شاشة</button>
+                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('statusTable')">نسخ كـ نص للواتساب</button>
+                                <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('statusTable', 'تحليل_الحالات_الفترة')">لقطة شاشة للواتساب</button>
                             </div>
                         </div>
                         <div class="mb-3 text-secondary fw-bold small p-2 rounded" style="background-color: var(--bs-tertiary-bg);" id="statusPeriodLabel"></div>
@@ -568,8 +553,8 @@
                         <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap">
                             <h4 class="fw-bold text-success mb-2"><i class="fa-solid fa-graduation-cap me-2"></i> الأداء المفصل للدورات التدريبية</h4>
                             <div>
-                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('courseTable')">نسخ للواتساب</button>
-                                <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('courseTable', 'تحليل_الدورات')">لقطة شاشة</button>
+                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('courseTable')">نسخ كـ نص للواتساب</button>
+                                <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('courseTable', 'تحليل_الدورات_الفترة')">لقطة شاشة للواتساب</button>
                             </div>
                         </div>
                         <div class="mb-3 text-secondary fw-bold small p-2 rounded" style="background-color: var(--bs-tertiary-bg);" id="coursePeriodLabel"></div>
@@ -582,7 +567,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية</h5>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية لكل منتج تدريبي وعاملي الحضور</h5>
                                     <div style="position: relative; height: 420px;"><canvas id="courseMatrixChart"></canvas></div>
                                 </div>
                             </div>
@@ -628,7 +613,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // الرابط الثابت والآمن الخاص بك والمربوط بالـ GitHub Pages مباشرة
     const cloudWebhookUrl = "https://script.google.com/macros/s/AKfycbwHA1v9HANPQVDZffBSzx4UsXPS-8FiMfpw0Gmkf434PjDmB1mMeKYHt_TSer9IBw_U/exec";
 
     let rawLeads = [];
@@ -842,7 +826,6 @@
         });
     }
 
-    // محرك الفيتش الذكي والربط التلقائي المباشر بالداتا السحابية
     async function fetchDataFromCloudAuto() {
         const syncStatus = document.getElementById('syncStatus');
         try {
@@ -889,35 +872,26 @@
                 }
             });
 
-            let fileDates = [];
-            rawLeads.forEach(item => { if(item['التاريخ']) fileDates.push(item['التاريخ']); });
-            rawSales.forEach(item => { if(item['التاريخ']) fileDates.push(item['التاريخ']); });
-            
-            if(fileDates.length > 0) {
-                fileDates.sort();
-                document.getElementById('startDate').value = fileDates[0];
-                document.getElementById('endDate').value = fileDates[fileDates.length - 1];
-            }
-
-            document.getElementById('dateFilterSection').classList.remove('d-none');
+            // تم إيقاف سلوك إجبار خانات الفلتر على أخذ تاريخ أول وآخر صف في الملف لإصلاح مشكلة التصفية
             document.getElementById('quickStats').classList.remove('d-none');
+            document.getElementById('stickyStatsWrapper').classList.remove('d-none');
             document.getElementById('homeChartSection').classList.remove('d-none'); 
 
             let uploadBox = document.getElementById('uploadContainer');
             if (uploadBox) {
-                uploadBox.className = "card p-3 mb-4";
+                uploadBox.className = "card p-3 mb-4 border-start border-success border-4";
                 uploadBox.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 text-start">
                         <div class="d-flex align-items-center gap-3">
                             <i class="fa-solid fa-circle-check text-success fa-2x"></i>
                             <div>
-                                <h5 class="mb-0 fw-bold">الربط السحابي التلقائي نشط ومحدث الآن 🟢</h5>
-                                <p class="text-muted small mb-0">الموقع متصل بالكامل بالجوجل شيت حياً. يتم سحب وتحديث الرسوم البيانية تلقائياً عند فتح الرابط.</p>
+                                <h5 class="mb-0 fw-bold">الاتصال السحابي التلقائي نشط ومحدّث لحظياً 🟢</h5>
+                                <p class="text-muted small mb-0">الموقع مربوط ومزامَن بالكامل حياً مع الجوجل شيت. يمكنك تغيير فترة الفحص وتحديث الرسوم البيانية بأي وقت.</p>
                             </div>
                         </div>
                         <div>
-                            <button class="btn btn-primary btn-sm fw-bold px-4 py-2" onclick="fetchDataFromCloudAuto()">
-                                <i class="fa-solid fa-arrows-rotate me-1"></i> تحديث البيانات فوري
+                            <button class="btn btn-sm btn-primary fw-bold px-4 py-2" onclick="fetchDataFromCloudAuto()">
+                                <i class="fa-solid fa-arrows-rotate me-1"></i> مزامنة الشيت الآن
                             </button>
                         </div>
                     </div>
@@ -960,6 +934,9 @@
 
         hideSupervisorTeamDetails();
         hideEmployeeDetails();
+
+        // تحديث شريط الفترة المرفق أعلى حاوية التثبيت (Sticky Components)
+        document.getElementById('stickyDateLabel').innerHTML = `<i class="fa-solid fa-calendar-days me-2"></i> الإحصائيات الحالية المعروضة للفترة من: <span class="badge bg-primary fs-6">${startDate}</span> إلى: <span class="badge bg-primary fs-6">${endDate}</span>`;
 
         const filteredLeads = rawLeads.filter(item => item['التاريخ'] && item['التاريخ'] >= startDate && item['التاريخ'] <= endDate);
         const filteredSales = rawSales.filter(item => item['التاريخ'] && item['التاريخ'] >= startDate && item['التاريخ'] <= endDate);
@@ -1025,8 +1002,6 @@
         renderStatusMatrix(filteredLeads, sortedDates);
         renderCourseMatrix(filteredLeads, filteredSales, sortedDates);
         renderEmployeeMatrix(filteredLeads, filteredSales, sortedDates);
-        
-        calculateSmartGeneralAnalysis(filteredLeads, filteredSales, totalConvRate);
     }
 
     function renderHomeTargetCharts(leads, sales) {
@@ -1104,7 +1079,7 @@
                 responsive: true, maintainAspectRatio: false, layout: { padding: { top: 25 } },
                 scales: {
                     y: { beginAtZero: true, grid: { color: dynamicGridColor }, ticks: { color: dynamicTextColor, font: { family: 'Cairo', weight: 'bold' } } },
-                    x: { grid: { display: false }, ticks: { color: dynamicTextColor, font: { family: 'Cairo', weight: 'bold' } } }
+                    x: { grid: { display: false }, ticks: { color: dynamicTextColor, font: { family: 'Cairo', weight: 'bold' } } },
                 },
                 plugins: { legend: { labels: { font: { family: 'Cairo', weight: 'bold' }, color: dynamicTextColor } } }
             }
@@ -1130,7 +1105,7 @@
         <div class="table-responsive">
             <table class="table table-bordered text-center align-middle m-0" style="background-color: var(--bs-card-bg); color: var(--bs-body-color);">
                 <thead class="table-dark">
-                    <tr><th>اسم المشرف Respons</th><th>موظفين إجمالي</th><th>ليدز CC</th><th>إتمامات CC</th><th>كفاءة فريق CC</th><th style="background-color: #7c3aed !important;">إتمامات إعادة الاستهداف</th></tr>
+                    <tr><th>اسم المشرف المسؤول</th><th>عدد الموظفين الإجمالي</th><th>عدد ليدز موظفين طلبات مران (CC)</th><th>عدد إتمامات موظفين طلبات مران (CC)</th><th>نسبة كفاءة تحويل فريق طلبات مران (CC)</th><th style="background-color: #7c3aed !important;">إتمامات فئة اعادة إستهداف</th></tr>
                 </thead>
                 <tbody>
         `;
@@ -1279,7 +1254,6 @@
                 <tbody>
         `;
 
-        let wellPerforming = []; let struggling = [];
         Object.values(stats).forEach(emp => {
             let ccRate = emp.ccLeads > 0 ? ((emp.ccSales / emp.ccLeads) * 100).toFixed(1) : 0;
             let ttTargetAchieved = ((emp.ttSales / 15) * 100).toFixed(1);
@@ -1292,9 +1266,6 @@
                 if (parseFloat(ccRate) >= 17.0) { statusText = "على التراك 🟢"; statusStyle = "color: #10b981;"; }
                 else { statusText = "دون التارجت 🔴"; statusStyle = "color: #ef4444;"; onTrack = false; }
             }
-
-            if (onTrack) wellPerforming.push({ name: emp.name, reason: `يسير بمعدل مستقر لتأمين التارجت.` });
-            else struggling.push({ name: emp.name, reason: `يعاني من فجوة في المتابعات مع العملاء.` });
 
             tableHtml += `
                 <tr><td class="fw-bold text-primary">${emp.name}</td><td>${emp.ccLeads}</td><td>${emp.ccSales}</td><td class="table-primary">${ccRate}%</td><td style="color:#7c3aed;">${emp.ttSales}</td><td>${ttTargetAchieved}%</td><td class="fw-bold" style="${statusStyle}">${statusText}</td></tr>
@@ -1322,58 +1293,6 @@
     function hideSupervisorTeamDetails() {
         document.getElementById('supervisorDetailView').classList.add('d-none');
         document.getElementById('supervisorMainView').classList.remove('d-none');
-    }
-
-    function calculateSmartGeneralAnalysis(leads, sales, currentRate) {
-        const rate = parseFloat(currentRate); const target = 16.5;
-        const contentBox = document.getElementById('smartReportContent');
-        if (!leads.length) return;
-
-        let statuses = {}; 
-        leads.forEach(l => { 
-            let s = String(l['الحالة 1'] || 'غير حدد').trim(); 
-            if(s !== 'غير حدد' && s !== 'غير محدد' && s !== 'null' && s !== '') statuses[s] = (statuses[s] || 0) + 1; 
-        });
-        let topStatuses = Object.keys(statuses).sort((a,b)=>statuses[b]-statuses[a]).slice(0, 3);
-
-        let srcLeads = {}, srcSales = {};
-        leads.forEach(l => { let s = String(l['كود التسويق'] || 'غير محدد').trim(); srcLeads[s] = (srcLeads[s]||0)+1; });
-        sales.forEach(s => { 
-            let clientNum = String(s['رقم العميل'] || '').trim();
-            let courseName = normalizeCourseName(s['نوع الدورة']);
-            let src = clientCourseToSourceMap[clientNum + "_" + courseName] || clientCourseToSourceMap[clientNum] || 'غير محدد';
-            srcSales[src] = (srcSales[src]||0)+1; 
-        });
-        let srcArray = Object.keys(srcLeads).map(k => {
-            return { name: k, leads: srcLeads[k], sales: srcSales[k]||0, conv: srcLeads[k]>0 ? parseFloat(((srcSales[k]||0)/srcLeads[k]*100).toFixed(1)) : 0 };
-        });
-        let bestSource = srcArray.sort((a,b)=> b.sales - a.sales)[0] || {name: 'لا يوجد', sales: 0, conv: 0};
-
-        let borderCol = rate < target ? "#ef4444" : "#10b981";
-        let tableHtml = `
-        <div class="executive-summary-box p-3" style="border-right-color: ${borderCol}; background-color: var(--bs-card-bg); color: var(--bs-body-color);">
-            <h5 class="fw-bold mb-3">مصفوفة الفحص الشامل والتحليلات المباشرة للفترة:</h5>
-            <div class="table-responsive">
-                <table class="table table-bordered text-center align-middle m-0" style="background-color: var(--bs-card-bg); color: var(--bs-body-color);">
-                    <thead class="table-dark">
-                        <tr><th>المحور</th><th>القراءة</th><th>نقاط القوة والمؤشرات</th></tr>
-                    </thead>
-                    <tbody>
-                        <tr><td class="fw-bold">الأداء العام للتحويل</td><td><b>${currentRate}%</b></td><td>${rate >= target ? "🟢 يتخطى مستهدف الخطة الذكية." : "🔴 يتطلب معالجة بعض فجوات الإغلاق الفردي لبعض اليوزرات."}</td></tr>
-                        <tr><td class="fw-bold">قناة الكثافة والتسويق الأقوى</td><td><code>${bestSource.name}</code></td><td>🚀 ساهم في ضخ وتحقيق <b>${bestSource.sales} صفقة ناجحة</b> مدمجة خلال الفترة.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>`;
-        contentBox.innerHTML = tableHtml;
-    }
-
-    function copyGeneralSummary() {
-        const start = document.getElementById('startDate').value; const end = document.getElementById('endDate').value;
-        const lCount = document.getElementById('totalLeadsCount').innerText; const sCount = document.getElementById('totalSalesCount').innerText;
-        const rate = document.getElementById('totalConversionRate').innerText;
-        let formattedText = `📊 *تقرير الأداء السحابي للمبيعات* 📊\n🗓 الفترة: من ${start} إلى ${end}\n🔹 إجمالي الليدز: ${lCount}\n🔹 إجمالي المبيعات: ${sCount}\n📈 معدل التحويل: ${rate}`;
-        navigator.clipboard.writeText(formattedText).then(() => { alert("✅ تم نسخ التقرير الأساسي بنجاح!"); });
     }
 
     function renderDailyPerformanceChart(leads, sales, sortedDates) {
@@ -1628,6 +1547,7 @@
         navigator.clipboard.writeText(text).then(() => { alert("✅ تم نسخ الجدول ومحاذاته بنجاح!"); });
     }
 
+    // نسخ مخرجات جدول الإكسيل الفوري
     function exportTableToExcel(tableId, fileName) {
         let table = document.getElementById(tableId); if (!table) return;
         let wb = XLSX.utils.table_to_book(table, { sheet: "تقرير الأداء الكلي" });
@@ -1649,7 +1569,7 @@
             XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([headers]), "إتمام بيع");
             XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['اسم الموظف', 'اليوزر القديم', 'اليوزر الجديد', 'الفئة', 'المشرف']]), "بيانات الموظفين");
             XLSX.writeFile(wb, "Sales_Data_Template.xlsx");
-        } catch (e) { alert("حدث خطأ ما في تهيئة الملف."); }
+        } catch (e) { alert("حدث خطأ ما في تهيئة قالب التحليلات."); }
     }
 
     function renderModalEmployeeTable() {
@@ -1683,18 +1603,25 @@
         employeeDatabase = updatedDb; updateSupervisorMapsFromDatabase();
         if (rawLeads.length > 0) applyFilters();
         bootstrap.Modal.getInstance(document.getElementById('employeeModal')).hide();
-        alert("✅ تم تحديث الهيكل المحلي بنجاح!");
+        alert("✅ تم تحديث مصفوفة الكادر والموظفين محلياً بنجاح!");
     }
 
     window.addEventListener('DOMContentLoaded', () => {
         updateSupervisorMapsFromDatabase();
-        const today = new Date();
-        document.getElementById('startDate').value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
         
-        let yesterday = new Date(); yesterday.setDate(today.getDate() - 1);
-        document.getElementById('endDate').value = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+        // هندسة التواريخ التلقائية: التصفية الافتراضية تبدأ من أول يوم في الشهر الحالي إلى تاريخ اليوم تلقائياً
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
+        const currentDay = String(today.getDate()).padStart(2, '0');
+        
+        const startStr = `${currentYear}-${currentMonth}-01`;
+        const endStr = `${currentYear}-${currentMonth}-${currentDay}`;
+        
+        document.getElementById('startDate').value = startStr;
+        document.getElementById('endDate').value = endStr;
 
-        // تشغيل محرك الربط والجلب التلقائي اللحظي بمجرد تحميل الصفحة على الـ GitHub
+        // بدء معالجة السيرفر وجلب الداتا مباشرة فور تحميل الصفحة أونلاين
         fetchDataFromCloudAuto();
     });
 </script>
