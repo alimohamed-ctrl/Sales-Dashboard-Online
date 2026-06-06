@@ -145,70 +145,6 @@
             margin-top: 50px; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
-        .executive-summary-box h5 {
-            font-weight: 700;
-            color: var(--bs-primary);
-            margin-bottom: 16px;
-            font-size: 1.15rem;
-        }
-        .insight-item {
-            margin-bottom: 12px;
-            font-size: 0.98rem;
-            line-height: 1.65;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed rgba(128,128,128,0.15);
-        }
-        .insight-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .btn-supervisor-drilldown {
-            background-color: rgba(59, 130, 246, 0.08);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: #1d4ed8;
-            padding: 6px 16px;
-            border-radius: 8px;
-            font-weight: 700;
-            transition: all 0.2s ease-in-out;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-        .btn-supervisor-drilldown:hover {
-            background-color: #2563eb;
-            color: white !important;
-            border-color: #2563eb;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-            transform: translateY(-1px);
-        }
-        [data-bs-theme="dark"] .btn-supervisor-drilldown {
-            background-color: rgba(59, 130, 246, 0.15);
-            border: 1px solid rgba(59, 130, 246, 0.4);
-            color: #93c5fd;
-        }
-        [data-bs-theme="dark"] .btn-supervisor-drilldown:hover {
-            background-color: #3b82f6;
-            color: white !important;
-        }
-
-        .btn-employee-drilldown {
-            background-color: transparent;
-            border: none;
-            color: #3b82f6;
-            padding: 0;
-            font-weight: 700;
-            text-decoration: underline;
-            transition: all 0.2s ease-in-out;
-        }
-        .btn-employee-drilldown:hover {
-            color: #2563eb !important;
-        }
-        [data-bs-theme="dark"] .btn-employee-drilldown {
-            color: #60a5fa;
-        }
     </style>
 </head>
 <body>
@@ -383,19 +319,19 @@
                         <div class="row">
                             <div class="col-md-12 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-line me-2"></i> نسبة تحقيق التارجت لكل مشرف (المستهدف البيعي هو: 17%)</h5>
+                                    <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-chart-line me-2"></i> نسبة تحقيق التارجت لكل مشرف (المستهدف البيعي لفرق CC هو: 17%)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="supervisorTargetChart"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق (أقل من 17%)</h5>
+                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق (أقل من 17% لـ CC)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="underperformingCCChart"></canvas></div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-circle-check me-2"></i> إجمالي حجم إتمامات ومبيعات الفريق (فئة اعادة إستهداف)</h5>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-circle-check me-2"></i> إجمالي حجم إتمامات ومبيعات الفريق (فئة اعادة إستهداف TT/GG)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="ttggSalesChart"></canvas></div>
                                 </div>
                             </div>
@@ -576,28 +512,16 @@
                     </div>
                 </div>
 
+                <!-- صفحة "بيانات الموظفين" المحدثة والمقسمة كلياً إلى جداول منفصلة حسب المشرف المسؤول -->
                 <div class="tab-pane fade" id="employee-db-pane" role="tabpanel">
                     <div class="card p-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="fw-bold text-primary mb-0"><i class="fa-solid fa-users me-2"></i> هيكلية فريق المبيعات والمشرفين (مزامنة سحابية مباشرة)</h4>
-                            <span class="badge bg-primary px-3 py-2 fs-6">البيانات حية ومباشرة ⚡</span>
+                            <h4 class="fw-bold text-primary mb-0"><i class="fa-solid fa-users me-2"></i> هيكلية الكادر التشغيلي مقسم بحسب المشرفين مدمج سحابياً</h4>
+                            <span class="badge bg-primary px-3 py-2 fs-6">البيانات حية ومحدثة ⚡</span>
                         </div>
-                        <p class="text-muted small">يتم قراءة وتحديث هذا الجدول تلقائياً وبشكل مباشر من التبويب الثالث في ملف الجوجل شيت الخاص بك.</p>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped text-center align-middle m-0" id="cloudEmployeeTable">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>اسم الموظف البيعي</th>
-                                        <th>اليوزر القديم (CC)</th>
-                                        <th>اليوزر الجديد (TT)</th>
-                                        <th>الفئة التشغيلية</th>
-                                        <th>المشرف المسؤول</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cloudEmployeeTableBody">
-                                    <tr><td colspan="5" class="text-muted py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> جاري تحميل هيكل الموظفين من السحابة...</td></tr>
-                                </tbody>
-                            </table>
+                        <p class="text-muted small">يقرأ النظام الجداول والأسماء التالية مقسمة لكل مشرف مسؤول بشكل مباشر وحصري من التبويب الثالث لملف جوجل شيت.</p>
+                        <div id="cloudEmployeeTablesContainer">
+                            <div class="text-muted py-4 text-center"><i class="fa-solid fa-spinner fa-spin me-2"></i> جاري جلب وتوزيع جداول المشرفين والفرق من السحابة...</div>
                         </div>
                     </div>
                 </div>
@@ -642,7 +566,6 @@
 <script>
     const cloudWebhookUrl = "https://script.google.com/macros/s/AKfycbwHA1v9HANPQVDZffBSzx4UsXPS-8FiMfpw0Gmkf434PjDmB1mMeKYHt_TSer9IBw_U/exec";
 
-    // تم إضافة البلجن هنا لحل المشكلة نهائياً وضمان رندر الشارتات بشكل مستقر أونلاين
     const customTopLabelsPlugin = {
         id: 'customTopLabels',
         afterDatasetsDraw(chart) {
@@ -653,7 +576,6 @@
             ctx.textAlign = 'center';
             const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
             ctx.fillStyle = isDark ? '#ffffff' : '#1e293b'; 
-
             chart.data.datasets.forEach((dataset, i) => {
                 const meta = chart.getDatasetMeta(i);
                 if (!meta.hidden && meta.type === 'bar') {
@@ -678,6 +600,7 @@
     let clientToEmployeeMap = {}; 
     let employeeFilterType = 'all'; 
     let homeEmployeeFilterType = 'all'; 
+    let globalDateFormat = 'MDY'; // متغير المراقبة لتحديد نوع الترتيب فترات الحملة تلقائياً واصلاح الخلل
 
     let employeeDatabase = [
         { name: 'آية احمد', oldUser: 'CC 35', newUser: 'TT 06', category: 'استهداف', supervisor: 'علي' },
@@ -744,22 +667,69 @@
         });
     }
 
+    // بناء جداول الموظفين وتقسيمها ديناميكياً لكل مشرف ببيانات فريقه المستقلة
     function renderCloudEmployeeTable() {
-        const tbody = document.getElementById('cloudEmployeeTableBody');
-        if (!tbody) return;
+        const container = document.getElementById('cloudEmployeeTablesContainer');
+        if (!container) return;
         if (employeeDatabase.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-muted py-3">لا توجد بيانات موظفين مسجلة حالياً.</td></tr>`;
+            container.innerHTML = `<div class="text-muted py-3 text-center">لا توجد بيانات موظفين مسجلة حالياً.</div>`;
             return;
         }
-        tbody.innerHTML = employeeDatabase.map(emp => `
-            <tr>
-                <td class="fw-bold text-primary">${emp.name || '---'}</td>
-                <td class="font-monospace fw-bold">${emp.oldUser || '---'}</td>
-                <td class="font-monospace fw-bold">${emp.newUser || '---'}</td>
-                <td><span class="badge bg-secondary fs-6 px-3">${emp.category || '---'}</span></td>
-                <td class="fw-bold text-secondary">${emp.supervisor || '---'}</td>
-            </tr>
-        `).join('');
+
+        let supervisorGroups = {};
+        employeeDatabase.forEach(emp => {
+            let supervisorName = emp.supervisor ? emp.supervisor.trim() : 'موظفين بدون مشرف محدد';
+            
+            // تطبيق منطق تحديد فئة الموظف ديناميكياً بناءً على بداية الكود (CC مقابل TT/GG) لضمان الدقة الكاملة
+            let codeCheck = normalizeEmpCode(emp.newUser || emp.oldUser);
+            if (!emp.category || emp.category.trim() === '') {
+                if (codeCheck.startsWith('TT') || codeCheck.startsWith('GG')) emp.category = 'إعادة استهداف';
+                else if (codeCheck.startsWith('CC')) emp.category = 'طلبات مران';
+            } else {
+                // تعديل المسمى ليناسب المنطق الصارم للوحة
+                if (emp.category.includes('استهداف')) emp.category = 'إعادة استهداف';
+                else if (emp.category.includes('مران') || emp.category.includes('رسمي')) emp.category = 'طلبات مران';
+            }
+
+            if (!supervisorGroups[supervisorName]) supervisorGroups[supervisorName] = [];
+            supervisorGroups[supervisorName].push(emp);
+        });
+
+        let sectionsHtml = '';
+        for (let supervisor in supervisorGroups) {
+            sectionsHtml += `
+                <div class="card p-3 mb-4 border-start border-primary border-4 shadow-sm">
+                    <h5 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-tie me-2"></i> فريق المشرف المسؤول: <span class="text-success">${supervisor}</span> <small class="text-muted fs-6 fw-normal">(${supervisorGroups[supervisor].length} يوزر نشط)</small></h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover text-center align-middle m-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>اسم الكادر البيعي</th>
+                                    <th>الكود القديم (CC)</th>
+                                    <th>كود إعادة الاستهداف (TT / GG)</th>
+                                    <th>المسار وقناة التارجت المحددة</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${supervisorGroups[supervisor].map(emp => `
+                                    <tr>
+                                        <td class="fw-bold text-dark">${emp.name || '---'}</td>
+                                        <td class="font-monospace fw-bold text-primary">${emp.oldUser || '---'}</td>
+                                        <td class="font-monospace fw-bold" style="color: #7c3aed;">${emp.newUser || '---'}</td>
+                                        <td>
+                                            <span class="badge ${emp.category.includes('استهداف') ? 'bg-purple text-wrap' : 'bg-primary'} fs-6 px-3" style="${emp.category.includes('استهداف') ? 'background-color: #7c3aed;' : ''}">
+                                                ${emp.category}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+        container.innerHTML = sectionsHtml;
     }
 
     function normalizeCourseName(name) {
@@ -767,7 +737,6 @@
         let s = String(name).toLowerCase().trim();
         let studyType = ' - عن بعد'; 
         if (s.includes('حضوري') || s.includes('onsite')) studyType = ' - حضوري';
-        
         if (s.includes('بكج إدارة المشاريع') || s.includes('11-بكج')) return 'بكج إدارة المشاريع والأعمال' + studyType;
         if (s.includes('بكج البيانات')) return 'بكج البيانات (Power BI + Excel)' + studyType;
         if (s.includes('التأسيسي')) return 'بكج الإدارة التأسيسي' + studyType;
@@ -781,7 +750,6 @@
         if (s.includes('نيبوش') || s.includes('nebosh') || s.includes('43-دورة')) return 'دورة النيبوش في السلامة والصحة المهنية (NEBOSH)' + studyType;
         if (s.includes('الذكاء الاصطناعي') || s.includes('23-مهارات')) return 'دورة مهارات الذكاء الاصطناعي في بيئة العمل' + studyType;
         if (s.includes('office') || s.includes('أوفيس')) return 'دورة مهارات مايكروسوفت أوفيس (Microsoft Office)' + studyType;
-        
         return name.trim();
     }
 
@@ -793,7 +761,14 @@
         if (parts.length === 3) {
             let p0 = parts[0].trim(); let p1 = parts[1].trim(); let p2 = parts[2].trim();
             if (p0.length === 4) return `${p0}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`; 
-            if (p2.length === 4) return `${p2}-${p1.padStart(2, '0')}-${p0.padStart(2, '0')}`; 
+            if (p2.length === 4) {
+                // الفحص والمطابقة البرمجية الذكية بحسب نوع الملف السحابي الحالي المرصود من الفاحص التلقائي لفك تكتل يوم 6
+                if (globalDateFormat === 'MDY') {
+                    return `${p2}-${p0.padStart(2, '0')}-${p1.padStart(2, '0')}`;
+                } else {
+                    return `${p2}-${p1.padStart(2, '0')}-${p0.padStart(2, '0')}`;
+                }
+            }
         }
         return str;
     }
@@ -817,22 +792,52 @@
 
     async function fetchDataFromCloudAuto() {
         const syncStatus = document.getElementById('syncStatus');
-        const syncBtn = document.getElementById('syncBtn');
+        const uploadContainer = document.getElementById('uploadContainer');
         
-        if (syncBtn) {
-            syncBtn.disabled = true;
-            syncBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> جاري تحديث الحسابات...`;
-        }
-        if (syncStatus) {
-            syncStatus.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-1"></i> جاري الاتصال السحابي المباشر بجوجل شيت وتحديث مؤشرات الأداء الكلية...';
+        // إظهار علامات التحميل الدائرية والقفل الفني فور بدء معالجة التحديث السحابي بناءً على طلبك
+        if (uploadContainer) {
+            uploadContainer.className = "card p-4 text-center mb-4 border-start border-primary border-4 bg-body-tertiary shadow-sm";
+            uploadContainer.innerHTML = `
+                <div class="mb-2"><i class="fa-solid fa-arrows-spin fa-spin text-primary display-4"></i></div>
+                <h5 class="fw-bold text-primary">جاري إعادة سحب وفحص ومزامنة البيانات حياً من السحابة...</h5>
+                <div class="small fw-bold text-secondary text-animated">يرجى الانتظار لحين تهيئة وتصحيح توزيع الرسوم البيانية والجداول الكلية.</div>
+            `;
         }
 
         try {
             const response = await fetch(cloudWebhookUrl);
             if (!response.ok) throw new Error("فشل الـ Web App في الاستجابة الآمنة.");
-            
             const payload = await response.json();
-            if (!payload.leads || !payload.sales) throw new Error("تنسيق الكود الداخلي للشيت غير مطابق للتوقعات الهيكلية.");
+            if (!payload.leads || !payload.sales) throw new Error("بنية تبويبات الشيت غير مطابقة للتوقعات الأساسية.");
+
+            // خوارزمية ذكية لاكتشاف صيغة ترتيب الأيام والشهور في الشيت تلقائياً لمنع التراكم في يوم واحد
+            let firstParts = new Set(); let secondParts = new Set();
+            let hasP0Greater12 = false; let hasP1Greater12 = false;
+            let combinedSample = [...payload.leads.slice(0, 100), ...payload.sales.slice(0, 100)];
+            
+            combinedSample.forEach(row => {
+                for (let k in row) {
+                    if (k.trim() === 'التاريخ' || k.trim() === 'تاريخ') {
+                        let s = String(row[k]).trim().split(' ')[0];
+                        let pts = s.split(/[-/.]/);
+                        if (pts.length === 3 && pts[2].trim().length === 4) {
+                            let p0 = parseInt(pts[0], 10); let p1 = parseInt(pts[1], 10);
+                            if (p0 > 12) hasP0Greater12 = true;
+                            if (p1 > 12) hasP1Greater12 = true;
+                            firstParts.add(pts[0]); secondParts.add(pts[1]);
+                        }
+                    }
+                }
+            });
+
+            if (hasP0Greater12) globalDateFormat = 'DMY';
+            else if (hasP1Greater12) globalDateFormat = 'MDY';
+            else {
+                // إذا كانت كافة البيانات تقع في أول 12 يوماً من الشهر، يتم التحقق برمجياً من الجزء المتغير
+                if (firstParts.size === 1 && secondParts.size > 1) globalDateFormat = 'MDY';
+                else if (secondParts.size === 1 && firstParts.size > 1) globalDateFormat = 'DMY';
+                else globalDateFormat = 'MDY'; // التنسيق الافتراضي الأكثر ملاءمة لخلل الحسابات السابق
+            }
 
             rawLeads = cleanSheetData(payload.leads);
             rawSales = cleanSheetData(payload.sales);
@@ -873,7 +878,7 @@
 
             let uploadBox = document.getElementById('uploadContainer');
             if (uploadBox) {
-                uploadBox.className = "card p-3 mb-4 border-start border-success border-4";
+                uploadBox.className = "card p-3 mb-4 border-start border-success border-4 shadow-sm";
                 uploadBox.innerHTML = `
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 text-start">
                         <div class="d-flex align-items-center gap-3">
@@ -884,7 +889,7 @@
                             </div>
                         </div>
                         <div>
-                            <button class="btn btn-sm btn-primary fw-bold px-4 py-2" id="syncBtn" onclick="fetchDataFromCloudAuto()">
+                            <button class="btn btn-sm btn-primary fw-bold px-4 py-2 shadow-sm" id="syncBtn" onclick="fetchDataFromCloudAuto()">
                                 <i class="fa-solid fa-arrows-rotate me-1"></i> مزامنة الشيت الان
                             </button>
                         </div>
@@ -949,20 +954,6 @@
         renderEmployeeMatrix(filteredLeads, filteredSales, sortedDates);
     }
 
-    function getDatesInRange(startDateStr, endDateStr) {
-        let dates = []; let startParts = startDateStr.split('-'); let endParts = endDateStr.split('-');
-        let start = new Date(Date.UTC(Number(startParts[0]), Number(startParts[1]) - 1, Number(startParts[2])));
-        let end = new Date(Date.UTC(Number(endParts[0]), Number(endParts[1]) - 1, Number(endParts[2])));
-        let current = new Date(start.getTime());
-        while (current <= end) {
-            let y = current.getUTCFullYear();
-            let m = String(current.getUTCMonth() + 1).padStart(2, '0');
-            let d = String(current.getUTCDate()).padStart(2, '0');
-            dates.push(`${y}-${m}-${d}`); current.setUTCDate(current.getUTCDate() + 1);
-        }
-        return dates;
-    }
-
     function renderHomeTargetCharts(leads, sales) {
         let empLeads = {}; let empSales = {};
         leads.forEach(l => {
@@ -977,6 +968,7 @@
         let unionEmps = Array.from(new Set([...Object.keys(empLeads), ...Object.keys(empSales)]));
         let ccData = [];
         unionEmps.forEach(emp => {
+            // تصفية فرقة CC بناءً على المنطق الصارم لبداية الكود الكودي
             if (emp.startsWith('CC')) {
                 let norm = emp.replace(/\s+/g, '').toUpperCase(); if (norm === 'CC01' || norm === 'CC02') return; 
                 let l = empLeads[emp] || 0; let s = empSales[emp] || 0;
@@ -1022,7 +1014,7 @@
                     { label: 'خط التارجت (15 إتمام)', data: ttggData.map(() => 15), borderColor: '#ef4444', borderWidth: 2.5, borderDash: [5, 5], pointRadius: 0, type: 'line', fill: false }
                 ]
             },
-            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: dynamicGridColor } }, x: { grid: { display: false } } } }
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: dynamicGridColor }, ticks: { color: dynamicTextColor } }, x: { grid: { display: false }, ticks: { color: dynamicTextColor } } } }
         });
     }
 
@@ -1093,7 +1085,7 @@
         Object.values(stats).forEach(emp => {
             let ccRate = emp.ccLeads > 0 ? ((emp.ccSales / emp.ccLeads) * 100).toFixed(1) : 0;
             let ttTargetAchieved = ((emp.ttSales / 15) * 100).toFixed(1);
-            let statusText = (emp.category === 'استهداف' || emp.ttSales > 0) ? (emp.ttSales >= proRatedTtTarget ? "على التراك 🟢" : "متأخر 🔴") : (parseFloat(ccRate) >= 17.0 ? "على التراك 🟢" : "دون التارجت 🔴");
+            let statusText = emp.oldCode.startsWith('TT') || emp.oldCode.startsWith('GG') || emp.newCode.startsWith('TT') || emp.newCode.startsWith('GG') ? (emp.ttSales >= proRatedTtTarget ? "على التراك 🟢" : "متأخر 🔴") : (parseFloat(ccRate) >= 17.0 ? "على التراك 🟢" : "دون التارجت 🔴");
             let statusStyle = statusText.includes('🔴') ? "color:#ef4444;" : "color:#10b981;";
 
             tableHtml += `<tr><td class="fw-bold text-primary">${emp.name}</td><td>${emp.ccLeads}</td><td>${emp.ccSales}</td><td class="table-primary">${ccRate}%</td><td style="color:#7c3aed;">${emp.ttSales}</td><td>${ttTargetAchieved}%</td><td class="fw-bold" style="${statusStyle}">${statusText}</td></tr>`;
@@ -1121,8 +1113,10 @@
         sales.forEach(s => { let emp = String(s['الموظف'] || '').trim(); if (emp) employeeSalesMap[emp] = (employeeSalesMap[emp] || 0) + 1; });
 
         let empSortedArray = Array.from(new Set([...Object.keys(employeeLeadsMap), ...Object.keys(employeeSalesMap)])).map(name => { return { name: name, leadsCount: employeeLeadsMap[name] || 0, salesCount: employeeSalesMap[name] || 0 }; }).filter(item => { let c = normalizeEmpCode(item.name); return c !== 'CC01' && c !== 'CC02'; });
-        if (homeEmployeeFilterType === 'cc') empSortedArray = empSortedArray.filter(item => item.name.toUpperCase().startsWith('CC'));
-        else if (homeEmployeeFilterType === 'tt_gg') empSortedArray = empSortedArray.filter(item => item.name.toUpperCase().startsWith('TT') || item.name.toUpperCase().startsWith('GG'));
+        
+        if (homeEmployeeFilterType === 'cc') empSortedArray = empSortedArray.filter(item => normalizeEmpCode(item.name).startsWith('CC'));
+        else if (homeEmployeeFilterType === 'tt_gg') empSortedArray = empSortedArray.filter(item => { let c = normalizeEmpCode(item.name); return c.startsWith('TT') || c.startsWith('GG'); });
+        
         empSortedArray.sort((a, b) => b.salesCount - a.salesCount);
 
         if (employeeChartInstance) employeeChartInstance.destroy();
@@ -1181,21 +1175,22 @@
         sales.forEach(s => { let code = normalizeEmpCode(s['الموظف']); if(!code) return; let empObj = Object.values(stats).find(e => e.oldCode === code || e.newCode === code); if(empObj) { if(empObj.oldCode === code) empObj.ccSales++; else empObj.ttSales++; } });
 
         let rowsArray = Object.values(stats).filter(item => item.oldCode !== 'CC01' && item.oldCode !== 'CC02');
-        if (employeeFilterType === 'cc') rowsArray = rowsArray.filter(item => item.oldUser && item.oldUser.toUpperCase().startsWith('CC'));
-        else if (employeeFilterType === 'tt_gg') rowsArray = rowsArray.filter(item => item.newUser && (item.newUser.toUpperCase().startsWith('TT') || item.newUser.toUpperCase().startsWith('GG')));
+        if (employeeFilterType === 'cc') rowsArray = rowsArray.filter(item => normalizeEmpCode(item.oldUser).startsWith('CC'));
+        else if (employeeFilterType === 'tt_gg') rowsArray = rowsArray.filter(item => { let c = normalizeEmpCode(item.newUser || item.oldUser); return c.startsWith('TT') || c.startsWith('GG'); });
         rowsArray.sort((a, b) => (b.ccSales + b.ttSales) - (a.ccSales + a.ttSales));
 
         let today = new Date(); let currentDay = today.getDate(); let totalDays = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
         let proRatedTtTarget = (15 / totalDays) * currentDay;
 
-        document.getElementById('employeeTableHeader').innerHTML = `<tr><th rowspan="2">اسم الموظف</th><th rowspan="2">الكود</th><th rowspan="2">المشرف</th><th colspan="3" class="bg-primary">قناة مران CC</th><th colspan="2" style="background-color:#7c3aed !important; color:#fff;">إعادة الاستهداف</th><th rowspan="2">الحالة</th></tr><tr><th class="bg-primary-subtle text-dark">الليدز</th><th class="bg-primary-subtle text-dark">الاتمامات</th><th class="bg-primary-subtle text-dark">التحويل</th><th style="background-color:#ddd6fe !important; color:#000;">الاتمامات</th><th style="background-color:#ddd6fe !important; color:#000;">تحقيق المستهدف</th></tr>`;
+        document.getElementById('employeeTableHeader').innerHTML = `<tr><th rowspan="2">اسم الموظف</th><th rowspan="2">الكود الفعلي</th><th rowspan="2">المشرف</th><th colspan="3" class="bg-primary">قناة مران CC</th><th colspan="2" style="background-color:#7c3aed !important; color:#fff;">إعادة الاستهداف</th><th rowspan="2">الحالة</th></tr><tr><th class="bg-primary-subtle text-dark">الليدز</th><th class="bg-primary-subtle text-dark">الاتمامات</th><th class="bg-primary-subtle text-dark">التحويل</th><th style="background-color:#ddd6fe !important; color:#000;">الاتمامات</th><th style="background-color:#ddd6fe !important; color:#000;">تحقيق المستهدف</th></tr>`;
         document.getElementById('employeeTableBody').innerHTML = rowsArray.map(row => {
             let ccRate = row.ccLeads > 0 ? ((row.ccSales / row.ccLeads) * 100).toFixed(1) : "0.0";
             let ttTargetAchieved = ((row.ttSales / 15) * 100).toFixed(1);
-            let statusText = (row.category === 'استهداف' || row.ttSales > 0) ? (row.ttSales >= proRatedTtTarget ? "على التراك 🟢" : "متأخر عن التراك 🔴") : (parseFloat(ccRate) >= 17.0 ? "على التراك 🟢" : "دون التارجت 🔴");
+            let statusText = row.oldCode.startsWith('TT') || row.oldCode.startsWith('GG') || row.newCode.startsWith('TT') || row.newCode.startsWith('GG') ? (row.ttSales >= proRatedTtTarget ? "على التراك 🟢" : "متأخر عن التراك 🔴") : (parseFloat(ccRate) >= 17.0 ? "على التراك 🟢" : "دون التارجت 🔴");
             let statusStyle = statusText.includes('🔴') ? "color: #ef4444;" : "color: #10b981;";
+            let codeDisplay = row.oldUser + (row.newUser && row.newUser !== row.oldUser ? ` / ${row.newUser}` : '');
 
-            return `<tr><td><button class="btn btn-employee-drilldown" onclick="showEmployeeDetails('${row.name}')">${row.name}</button></td><td class="font-monospace small">${row.oldUser} / ${row.newUser}</td><td>${row.supervisor}</td><td>${row.ccLeads}</td><td>${row.ccSales}</td><td class="fw-bold">${ccRate}%</td><td style="color:#7c3aed; font-weight:700;">${row.ttSales}</td><td>${ttTargetAchieved}%</td><td class="fw-bold" style="${statusStyle}">${statusText}</td></tr>`;
+            return `<tr><td><button class="btn btn-employee-drilldown" onclick="showEmployeeDetails('${row.name}')">${row.name}</button></td><td class="font-monospace small fw-bold">${codeDisplay}</td><td>${row.supervisor}</td><td>${row.ccLeads}</td><td>${row.ccSales}</td><td class="fw-bold">${ccRate}%</td><td style="color:#7c3aed; font-weight:700;">${row.ttSales}</td><td>${ttTargetAchieved}%</td><td class="fw-bold" style="${statusStyle}">${statusText}</td></tr>`;
         }).join('');
 
         if (employeeMatrixChartInstance) employeeMatrixChartInstance.destroy();
@@ -1214,7 +1209,7 @@
         document.getElementById('employeeDetailTitle').innerHTML = `تحليل الموظف الفردي: <span class="text-success">${empName}</span>`;
         document.getElementById('empDetailSales').innerText = empSales.length;
 
-        let isTtGg = empObj && (empObj.category === 'استهداف' || (empObj.newUser && (normalizeEmpCode(empObj.newUser).startsWith('TT') || normalizeEmpCode(empObj.newUser).startsWith('GG'))));
+        let isTtGg = oldCode.startsWith('TT') || oldCode.startsWith('GG') || newCode.startsWith('TT') || newCode.startsWith('GG');
         if (isTtGg) {
             document.getElementById('empCard1Label').innerText = "مسار الأداء التشغيلي"; document.getElementById('empDetailLeads').innerText = "قناة إعادة استهداف";
             document.getElementById('empCard3Label').innerText = `تحقيق المستهدف الشهرى (15 صفقة)`; document.getElementById('empDetailConversion').innerText = `${((empSales.length/15)*100).toFixed(1)}%`;
