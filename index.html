@@ -590,6 +590,7 @@
         }
     };
 
+    // إعلان وتثبيت كافة المتغيرات العالمية لمنع أخطاء التعريف السحابية نهائياً
     let rawLeads = [];
     let rawSales = [];
     let empToSuperMap = {}; 
@@ -600,6 +601,20 @@
     let employeeFilterType = 'all'; 
     let homeEmployeeFilterType = 'all'; 
     let globalDateFormat = 'MDY'; 
+
+    let dailyChartInstance = null; 
+    let employeeChartInstance = null; 
+    let supervisorTargetChartInstance = null;
+    let underperformingCCChartInstance = null; 
+    let ttggSalesChartInstance = null;
+    let ccEmployeeTargetChartInstance = null; 
+    let ttggEmployeeTargetChartInstance = null;
+    let employeeMatrixChartInstance = null; 
+    let sourceMatrixChartInstance = null;
+    let statusMatrixChartInstance = null; 
+    let courseMatrixChartInstance = null;
+    let teamChartInstance = null; 
+    let employeeTimelineChartInstance = null;
 
     let employeeDatabase = [
         { name: 'آية احمد', oldUser: 'CC 35', newUser: 'TT 06', category: 'استهداف', supervisor: 'علي' },
@@ -886,6 +901,44 @@
         }
     }
 
+    function toggleTheme() {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-bs-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-bs-theme', newTheme);
+        document.getElementById('themeIcon').className = newTheme === 'dark' ? 'fa-solid fa-sun me-2' : 'fa-solid fa-moon me-2';
+        document.getElementById('themeText').innerText = newTheme === 'dark' ? 'الوضع النهاري' : 'الوضع الليلي';
+        if(rawLeads.length > 0) applyFilters();
+    }
+
+    function filterEmployees(type) {
+        employeeFilterType = type;
+        const btnAll = document.getElementById('btnEmpAll');
+        const btnCC = document.getElementById('btnEmpCC');
+        const btnTTGG = document.getElementById('btnEmpTTGG');
+        btnAll.className = "btn btn-outline-info btn-sm fw-bold px-3";
+        btnCC.className = "btn btn-outline-info btn-sm fw-bold px-3";
+        btnTTGG.className = "btn btn-outline-info btn-sm fw-bold px-3";
+        if (type === 'all') btnAll.className = "btn btn-info btn-sm fw-bold px-3 active";
+        if (type === 'cc') btnCC.className = "btn btn-info btn-sm fw-bold px-3 active";
+        if (type === 'tt_gg') btnTTGG.className = "btn btn-info btn-sm fw-bold px-3 active";
+        if(rawLeads.length > 0) applyFilters();
+    }
+
+    function filterHomeEmployees(type) {
+        homeEmployeeFilterType = type;
+        const btnAll = document.getElementById('btnHomeAll');
+        const btnCC = document.getElementById('btnHomeCC');
+        const btnTTGG = document.getElementById('btnHomeTTGG');
+        btnAll.className = "btn btn-outline-info btn-sm fw-bold px-3";
+        btnCC.className = "btn btn-outline-info btn-sm fw-bold px-3";
+        btnTTGG.className = "btn btn-outline-info btn-sm fw-bold px-3";
+        if (type === 'all') btnAll.className = "btn btn-info btn-sm fw-bold px-3 active";
+        if (type === 'cc') btnCC.className = "btn btn-info btn-sm fw-bold px-3 active";
+        if (type === 'tt_gg') btnTTGG.className = "btn btn-info btn-sm fw-bold px-3 active";
+        if(rawLeads.length > 0) applyFilters();
+    }
+
     function applyFilters() {
         const startDate = document.getElementById('startDate').value;
         const endDate = document.getElementById('endDate').value;
@@ -935,21 +988,6 @@
         renderStatusMatrix(filteredLeads, sortedDates);
         renderCourseMatrix(filteredLeads, filteredSales, sortedDates);
         renderEmployeeMatrix(filteredLeads, filteredSales, sortedDates);
-    }
-
-    // [إصلاح هندسي] تم إعادة هذه الدالة الحيوية التي تسببت في توقف الرسوم البيانية والموقع بالكامل
-    function getDatesInRange(startDateStr, endDateStr) {
-        let dates = []; let startParts = startDateStr.split('-'); let endParts = endDateStr.split('-');
-        let start = new Date(Date.UTC(Number(startParts[0]), Number(startParts[1]) - 1, Number(startParts[2])));
-        let end = new Date(Date.UTC(Number(endParts[0]), Number(endParts[1]) - 1, Number(endParts[2])));
-        let current = new Date(start.getTime());
-        while (current <= end) {
-            let y = current.getUTCFullYear();
-            let m = String(current.getUTCMonth() + 1).padStart(2, '0');
-            let d = String(current.getUTCDate()).padStart(2, '0');
-            dates.push(`${y}-${m}-${d}`); current.setUTCDate(current.getUTCDate() + 1);
-        }
-        return dates;
     }
 
     function renderHomeTargetCharts(leads, sales) {
