@@ -308,16 +308,19 @@
                                             <div class="card p-2 text-center h-100" style="border-right: 4px solid #6366f1;">
                                                 <span class="text-muted small fw-bold d-block mb-1">إجمالي الليدز</span>
                                                 <h4 class="fw-bold mb-0" style="color: #6366f1;" id="cleanLeadsCount">0</h4>
+                                            </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="card p-2 text-center h-100" style="border-right: 4px solid #ec4899;">
                                                 <span class="text-muted small fw-bold d-block mb-1">إتمامات</span>
                                                 <h4 class="fw-bold mb-0" style="color: #ec4899;" id="cleanSalesCount">0</h4>
+                                            </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="card p-2 text-center h-100" style="border-right: 4px solid #64748b;">
                                                 <span class="text-muted small fw-bold d-block mb-1">معدل التحويل</span>
                                                 <h4 class="fw-bold mb-0 mt-1" id="cleanConversionRate">0%</h4>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -494,7 +497,7 @@
                         <div class="d-flex justify-content-between align-items-center mb-1 flex-wrap">
                             <h4 class="fw-bold text-primary mb-2"><i class="fa-solid fa-table me-2"></i> الأداء التسويقي للأكواد (السورس)</h4>
                             <div>
-                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('sourceTable')">نسخ للواتساب</button>
+                                <button class="btn btn-primary btn-sm me-2" onclick="copyTableToClipboard('sourceTable')">نسخ كـ نص للواتساب</button>
                                 <button class="btn btn-info btn-sm" onclick="takeTableScreenshot('sourceTable', 'تحليل_السورس_الفترة')">لقطة شاشة للواتساب</button>
                             </div>
                         </div>
@@ -564,7 +567,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية</h5>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية لكل منتج تدريبي وعاملي الحضور</h5>
                                     <div style="position: relative; height: 420px;"><canvas id="courseMatrixChart"></canvas></div>
                                 </div>
                             </div>
@@ -573,7 +576,6 @@
                     </div>
                 </div>
 
-                <!-- الصفحة الجديدة الخاصة بقاعدة بيانات الموظفين والمشرفين سحابياً -->
                 <div class="tab-pane fade" id="employee-db-pane" role="tabpanel">
                     <div class="card p-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -733,15 +735,38 @@
         `).join('');
     }
 
+    function normalizeCourseName(name) {
+        if (!name) return 'أخرى / غير محدد';
+        let s = String(name).toLowerCase().trim();
+        let studyType = ' - عن بعد'; 
+        if (s.includes('حضوري') || s.includes('onsite')) studyType = ' - حضوري';
+        
+        if (s.includes('بكج إدارة المشاريع') || s.includes('11-بكج')) return 'بكج إدارة المشاريع والأعمال' + studyType;
+        if (s.includes('بكج البيانات')) return 'بكج البيانات (Power BI + Excel)' + studyType;
+        if (s.includes('التأسيسي')) return 'بكج الإدارة التأسيسي' + studyType;
+        if (s.includes('pmp') || s.includes('01-دورة إدارة المشاريع') || s.includes('15-دورة إدارة المشاريع') || s.includes('إدارة المشاريع')) return 'دورة إدارة المشاريع الاحترافية (PMP)' + studyType;
+        if (s.includes('excel') || s.includes('إكسل') || s.includes('اكسل') || s.includes('03-دورة')) return 'دورة مهارات مايكروسوفت إكسيل (Excel)' + studyType;
+        if (s.includes('kpi') || s.includes('مؤشرات') || s.includes('04-دورة')) return 'دورة مؤشرات قياس الأداء الرئيسية (KPIs)' + studyType;
+        if (s.includes('power-bi') || s.includes('power bi') || s.includes('تحليل البيانات') || s.includes('02-دورة')) return 'دورة تحليل البيانات (Power-BI)' + studyType;
+        if (s.includes('aphri') || s.includes('06-دورة')) return 'دورة المشارك المهني في الموارد البشرية (aPHRi)' + studyType;
+        if (s.includes('موارد') || s.includes('hr') || s.includes('19-دورة')) return 'دورة إدارة الموارد البشرية (HR)' + studyType;
+        if (s.includes('المخاطر') || s.includes('rmp') || s.includes('09-إدارة')) return 'دورة إدارة المخاطر الاحترافية (RMP)' + studyType;
+        if (s.includes('نيبوش') || s.includes('nebosh') || s.includes('43-دورة')) return 'دورة النيبوش في السلامة والصحة المهنية (NEBOSH)' + studyType;
+        if (s.includes('الذكاء الاصطناعي') || s.includes('23-مهارات')) return 'دورة مهارات الذكاء الاصطناعي في بيئة العمل' + studyType;
+        if (s.includes('office') || s.includes('أوفيس')) return 'دورة مهارات مايكروسوفت أوفيس (Microsoft Office)' + studyType;
+        
+        return name.trim();
+    }
+
     function standardParseDate(val) {
         if (!val) return '';
-        let str = String(val).trim().split(' ')[0]; // عزل الساعة والدقائق تماماً لضمان دقة الفرز والتاريخ الكودي
+        let str = String(val).trim().split(' ')[0]; 
         if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
         let parts = str.split(/[-/.]/);
         if (parts.length === 3) {
             let p0 = parts[0].trim(); let p1 = parts[1].trim(); let p2 = parts[2].trim();
-            if (p0.length === 4) return `${p0}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`; // صيغة YYYY-MM-DD
-            if (p2.length === 4) return `${p2}-${p1.padStart(2, '0')}-${p0.padStart(2, '0')}`; // صيغة DD/MM/YYYY المعيارية للشيتات
+            if (p0.length === 4) return `${p0}-${p1.padStart(2, '0')}-${p2.padStart(2, '0')}`; 
+            if (p2.length === 4) return `${p2}-${p1.padStart(2, '0')}-${p0.padStart(2, '0')}`; 
         }
         return str;
     }
@@ -753,7 +778,6 @@
             for (let key in row) {
                 let cleanedKey = String(key).trim().replace(/[\u200B-\u200D\uFEFF]/g, "");
                 let val = row[key];
-                // دمج وتوحيد مسميات أعمدة التاريخ لحل مشكلة تجاهل قراءة جزء من البيانات
                 if (cleanedKey === 'التاريخ' || cleanedKey === 'تاريخ') {
                     cleanedKey = 'التاريخ';
                     val = standardParseDate(val);
@@ -768,7 +792,6 @@
         const syncStatus = document.getElementById('syncStatus');
         const syncBtn = document.getElementById('syncBtn');
         
-        // إظهار علامة تحميل فنية عند الضغط على زر التحديث السحابي المحلى
         if (syncBtn) {
             syncBtn.disabled = true;
             syncBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> جاري تحديث الحسابات...`;
@@ -801,7 +824,7 @@
             }
 
             updateSupervisorMapsFromDatabase();
-            renderCloudEmployeeTable(); // تحديث وعرض صفحة الموظفين السحابية الجديدة تلقائياً
+            renderCloudEmployeeTable(); 
 
             clientCourseToSourceMap = {}; clientToEmployeeMap = {}; 
             rawLeads.forEach(lead => {
@@ -916,11 +939,11 @@
     function renderHomeTargetCharts(leads, sales) {
         let empLeads = {}; let empSales = {};
         leads.forEach(l => {
-            let emp = String(l['الموظف'] || '').trim(); if(!emp || emp === 'غير حدد' || emp === 'غير محدد' || emp === 'null') return;
+            let emp = String(l['الموظف'] || '').trim(); if(!emp || emp === 'غير حدد' || emp === 'غير مححدد' || emp === 'null') return;
             let clean = normalizeEmpCode(emp); empLeads[clean] = (empLeads[clean] || 0) + 1;
         });
         sales.forEach(s => {
-            let emp = String(s['الموظف'] || '').trim(); if(!emp || emp === 'غير حدد' || emp === 'غير محدد' || emp === 'null') return;
+            let emp = String(s['الموظف'] || '').trim(); if(!emp || emp === 'غير حدد' || emp === 'غير مححدد' || emp === 'null') return;
             let clean = normalizeEmpCode(emp); empSales[clean] = (empSales[clean] || 0) + 1;
         });
 
@@ -1142,7 +1165,7 @@
         document.getElementById('employeeTableBody').innerHTML = rowsArray.map(row => {
             let ccRate = row.ccLeads > 0 ? ((row.ccSales / row.ccLeads) * 100).toFixed(1) : "0.0";
             let ttTargetAchieved = ((row.ttSales / 15) * 100).toFixed(1);
-            let statusText = (row.category === 'استهداف' || row.ttSales > 0) ? (row.ttSales >= proRatedTtTarget ? "على التراك 🟢" : "متأخر 🔴") : (parseFloat(ccRate) >= 17.0 ? "على التراك 🟢" : "دون التارجت 🔴");
+            let statusText = (row.category === 'استهداف' || row.ttSales > 0) ? (row.ttSales >= proRatedTtTarget ? "على التراك 🟢" : "متأخر عن التراك 🔴") : (parseFloat(ccRate) >= 17.0 ? "على التراك 🟢" : "دون التارجت 🔴");
             let statusStyle = statusText.includes('🔴') ? "color: #ef4444;" : "color: #10b981;";
 
             return `<tr><td><button class="btn btn-employee-drilldown" onclick="showEmployeeDetails('${row.name}')">${row.name}</button></td><td class="font-monospace small">${row.oldUser} / ${row.newUser}</td><td>${row.supervisor}</td><td>${row.ccLeads}</td><td>${row.ccSales}</td><td class="fw-bold">${ccRate}%</td><td style="color:#7c3aed; font-weight:700;">${row.ttSales}</td><td>${ttTargetAchieved}%</td><td class="fw-bold" style="${statusStyle}">${statusText}</td></tr>`;
@@ -1197,7 +1220,6 @@
     window.addEventListener('DOMContentLoaded', () => {
         updateSupervisorMapsFromDatabase();
         
-        // التصفية الافتراضية الذكية تبدأ من أول يوم في الشهر الحالي إلى تاريخ اليوم الحالي تماماً[cite: 2]
         const today = new Date();
         const currentYear = today.getFullYear();
         const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
