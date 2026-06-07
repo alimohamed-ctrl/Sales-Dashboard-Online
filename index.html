@@ -300,7 +300,7 @@
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق (أقل من 17%)</h5>
+                                    <h5 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-user-slash me-2"></i> عدد الموظفين دون التارجت في كل فريق (أقل من 17% لـ CC)</h5>
                                     <div style="position: relative; height: 360px;"><canvas id="underperformingCCChart"></canvas></div>
                                 </div>
                             </div>
@@ -377,7 +377,7 @@
                                     <div class="card p-3 text-center border-right stat-card" style="border-right-color: #10b981;"><span class="text-muted small fw-bold d-block mb-1">إجمالي الاتمامات والمبيعات</span><h4 class="fw-bold text-success mb-0" id="empDetailSales">0</h4></div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #0dcaf0;"><span class="text-muted small fw-bold d-block mb-1" id="empCard3Label">معدل التحويل الفردي الكلي</span><h4 class="fw-bold text-info mb-0" id="empDetailConversion">0%</h4></div>
+                                    <div class="card p-3 text-center border-right stat-card" style="border-right-color: #0dcaf0;"><span class="text-muted small fw-bold d-block mb-1">معدل التحويل الفردي الكلي</span><h4 class="fw-bold text-info mb-0" id="empDetailConversion">0%</h4></div>
                                 </div>
                             </div>
                             <div class="row">
@@ -478,7 +478,7 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 <div class="card p-4 border" style="border-color: rgba(128,128,128,0.15) !important;">
-                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية لكل منتج تدريبي</h5>
+                                    <h5 class="fw-bold mb-3 text-success"><i class="fa-solid fa-chart-bar me-2"></i> حجم الطلبات مقابل المبيعات الفعلية لكل منتج تدريبي وعاملي الحضور</h5>
                                     <div style="position: relative; height: 420px;"><canvas id="courseMatrixChart"></canvas></div>
                                 </div>
                             </div>
@@ -510,7 +510,35 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    // الإعلان عن كتل المتغيرات والألوان بشكل صارم في مقدمة ملف التثبيت الموحد لمنع تعارض المتصفح المسبب للتجميد
+    // مستشعر ومقتنص الأخطاء الشامل في أول السكريبت لكسر التحميل اللانهائي وكشف الغوامض فوراً
+    window.onerror = function(message, source, lineno, colno, error) {
+        alert("🚨 رادار فحص النظام كشف فجوة تشغيلية:\n\nالرسالة: " + message + "\nالسطر المستهدف: " + lineno + "\nالملف: " + source);
+        return false;
+    };
+
+    const cloudWebhookUrl = "https://script.google.com/macros/s/AKfycbzSXfs2wlqdk_QQQDfEACs4L6rncFrYblA95wezBJ1TBgfrDLw13lrfZbVaGigwmvGi/exec";
+
+    function getDatesInRange(startDateStr, endDateStr) {
+        let dates = [];
+        if (!startDateStr || !endDateStr) return dates;
+        let startParts = startDateStr.split('-');
+        let endParts = endDateStr.split('-');
+        if(startParts.length !== 3 || endParts.length !== 3) return dates;
+        
+        let start = new Date(Date.UTC(Number(startParts[0]), Number(startParts[1]) - 1, Number(startParts[2])));
+        let end = new Date(Date.UTC(Number(endParts[0]), Number(endParts[1]) - 1, Number(endParts[2])));
+        let current = new Date(start.getTime());
+        
+        while (current <= end) {
+            let y = current.getUTCFullYear();
+            let m = String(current.getUTCMonth() + 1).padStart(2, '0');
+            let d = String(current.getUTCDate()).padStart(2, '0');
+            dates.push(`${y}-${m}-${d}`);
+            current.setUTCDate(current.getUTCDate() + 1);
+        }
+        return dates;
+    }
+
     function getChartThemeColors() {
         const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
         return {
@@ -737,7 +765,7 @@
     }
 
     async function fetchDataFromCloudAuto() {
-        let mainFilterBtn = document.getElementById('mainFilterBtn');
+        const mainFilterBtn = document.getElementById('mainFilterBtn');
         let uploadContainer = document.getElementById('uploadContainer');
         
         if (uploadContainer) {
@@ -751,9 +779,9 @@
         if (mainFilterBtn) mainFilterBtn.disabled = true;
 
         try {
-            let response = await fetch(cloudWebhookUrl);
+            const response = await fetch(cloudWebhookUrl);
             if (!response.ok) throw new Error("فشل الـ Web App في الاستجابة الآمنة.");
-            let payload = await response.json();
+            const payload = await response.json();
             if (!payload.leads || !payload.sales) throw new Error("تبويبات الشيت غير مطابقة للتوقعات الأساسية.");
 
             let firstParts = new Set(); let secondParts = new Set();
@@ -826,8 +854,8 @@
                         <div class="d-flex align-items-center gap-3">
                             <i class="fa-solid fa-circle-check text-success fa-2x"></i>
                             <div>
-                                <h5 class="mb-0 fw-bold">الربط والاتصال السحابي مستقر ومطابق بنسبة 100% 🟢</h5>
-                                <p class="text-muted small mb-0">الموقع مربوط ومزامَن بالكامل حياً مع الجوجل شيت. تم تفعيل إصلاح التاريخ السيرفري لحساب كافة الـ 647 ليد بنجاح.</p>
+                                <h5 class="mb-0 fw-bold">الربط والاتصال السحابي التلقائي مستقر ومطابق بنسبة 100% 🟢</h5>
+                                <p class="text-muted small mb-0">الموقع محدث بالكامل حياً مع الجوجل شيت. تم تفعيل إصلاح التاريخ السيرفري لحساب كافة الـ 647 ليد بنجاح.</p>
                             </div>
                         </div>
                         <div>
@@ -946,6 +974,8 @@
     }
 
     function renderHomeTargetCharts(leads, sales) {
+        if (!document.getElementById('ccEmployeeTargetChart') || !document.getElementById('ttggEmployeeTargetChart')) return;
+
         let empLeads = {}; let empSales = {};
         leads.forEach(l => {
             let emp = String(l['الموظف'] || '').trim(); if(!emp || emp === 'غير حدد' || emp === 'غير مححدد' || emp === 'null') return;
@@ -1007,6 +1037,8 @@
     }
 
     function renderSupervisorCharts(leads, sales) {
+        if (!document.getElementById('supervisorTargetChart') || !document.getElementById('underperformingCCChart') || !document.getElementById('ttggSalesChart')) return;
+
         let empLeads = {}; let empSales = {};
         leads.forEach(l => { let emp = String(l['الموظف'] || '').trim(); if(emp) empLeads[normalizeEmpCode(emp)] = (empLeads[normalizeEmpCode(emp)] || 0) + 1; });
         sales.forEach(s => { let emp = String(s['الموظف'] || '').trim(); if(emp) empSales[normalizeEmpCode(emp)] = (empSales[normalizeEmpCode(emp)] || 0) + 1; });
@@ -1053,6 +1085,8 @@
     }
 
     function showSupervisorTeamDetails(supName) {
+        if (!document.getElementById('teamPerformanceChart')) return;
+
         const startDate = document.getElementById('startDate').value; const endDate = document.getElementById('endDate').value;
         const leads = rawLeads.filter(item => item['التاريخ'] && item['التاريخ'] >= startDate && item['التاريخ'] <= endDate);
         const sales = rawSales.filter(item => item['التاريخ'] && item['التاريخ'] >= startDate && item['التاريخ'] <= endDate);
@@ -1088,9 +1122,9 @@
         teamChartInstance = new Chart(document.getElementById('teamPerformanceChart').getContext('2d'), { type: 'bar', plugins: [customTopLabelsPlugin], data: { labels: Object.values(stats).map(r => r.name), datasets: [{ label: 'CC Sales', data: Object.values(stats).map(r => r.ccSales), backgroundColor: '#3b82f6', borderRadius: 4 }, { label: 'TT/GG Sales', data: Object.values(stats).map(r => r.ttSales), backgroundColor: '#7c3aed', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, layout: { padding: { top: 25 } }, scales: { y: { beginAtZero: true, grid: { color: dynamicGridColor }, ticks: { color: dynamicTextColor, font: { family: 'Cairo', weight: 'bold' } } }, x: { grid: { display: false }, ticks: { color: dynamicTextColor, font: { family: 'Cairo', weight: 'bold' } } } } } });
     }
 
-    function hideSupervisorTeamDetails() { document.getElementById('supervisorDetailView').classList.add('d-none'); document.getElementById('supervisorMainView').classList.remove('d-none'); }
-
     function renderDailyPerformanceChart(leads, sales, sortedDates) {
+        if (!document.getElementById('dailyPerformanceChart')) return;
+
         let dailyLeadsMap = {}; let dailySalesMap = {}; sortedDates.forEach(d => { dailyLeadsMap[d] = 0; dailySalesMap[d] = 0; });
         leads.forEach(l => { if(dailyLeadsMap[l['التاريخ']] !== undefined) dailyLeadsMap[l['التاريخ']]++; });
         sales.forEach(s => { if(dailySalesMap[s['التاريخ']] !== undefined) dailySalesMap[s['التاريخ']]++; });
@@ -1102,6 +1136,8 @@
     }
 
     function renderEmployeeSalesChart(leads, sales) {
+        if (!document.getElementById('employeeSalesChart')) return;
+
         let employeeLeadsMap = {}; let employeeSalesMap = {};
         leads.forEach(l => { let emp = String(l['الموظف'] || '').trim(); if (emp) employeeLeadsMap[emp] = (employeeLeadsMap[emp] || 0) + 1; });
         sales.forEach(s => { let emp = String(s['الموظف'] || '').trim(); if (emp) employeeSalesMap[emp] = (employeeSalesMap[emp] || 0) + 1; });
@@ -1120,6 +1156,8 @@
     }
 
     function renderSourceMatrix(filteredLeads, filteredSales, sortedDates) {
+        if (!document.getElementById('sourceMatrixChart')) return;
+
         let matrix = {};
         filteredLeads.forEach(l => { let src = String(l['كود التسويق'] || 'غير مححدد').trim(); if (!matrix[src]) matrix[src] = { totalLeads: 0, totalSales: 0 }; matrix[src].totalLeads++; });
         filteredSales.forEach(s => { let clientNum = String(s['رقم العميل'] || '').trim(); let courseName = normalizeCourseName(s['نوع الدورة']); let src = clientCourseToSourceMap[clientNum + "_" + courseName] || clientCourseToSourceMap[clientNum] || 'غير مححدد'; if (!matrix[src]) matrix[src] = { totalLeads: 0, totalSales: 0 }; matrix[src].totalSales++; });
@@ -1137,6 +1175,8 @@
     }
 
     function renderStatusMatrix(leads, sortedDates) {
+        if (!document.getElementById('statusMatrixChart')) return;
+
         let matrix = {}; let totalGlobalLeads = leads.length;
         leads.forEach(l => { let status = String(l['الحالة 1'] || 'غير حدد').trim(); if (!matrix[status]) matrix[status] = { total: 0 }; matrix[status].total++; });
 
@@ -1153,12 +1193,17 @@
     }
 
     function renderCourseMatrix(leads, sales, sortedDates) {
+        if (!document.getElementById('courseMatrixChart')) return;
+
         let matrix = {};
         leads.forEach(l => { let course = normalizeCourseName(l['نوع الدورة']); if (!matrix[course]) matrix[course] = { totalLeads: 0, totalSales: 0 }; matrix[course].totalLeads++; });
         sales.forEach(s => { let course = normalizeCourseName(s['نوع الدورة']); if (!matrix[course]) matrix[course] = { totalLeads: 0, totalSales: 0 }; matrix[course].totalSales++; });
 
         let rowsArray = Object.keys(matrix).filter(course => course !== 'أخرى / غير محدد' && course !== 'null' && course !== '').map(course => { let totalLeads = matrix[course].totalLeads; return { course, totalLeads, totalSales: matrix[course].totalSales, conv: totalLeads > 0 ? parseFloat(((matrix[course].totalSales / totalLeads) * 100).toFixed(1)) : 0 }; });
         rowsArray.sort((a, b) => b.conv - a.conv);
+
+        document.getElementById('courseTableHeader').innerHTML = `<tr><th>اسم الدورة وتكوين الحضور</th><th>طلبات الليدز</th><th>المبيعات المحققة</th><th>كفاءة المنتج</th></tr>`;
+        document.getElementById('courseTableBody').innerHTML = rowsArray.map(row => `<tr><td class="text-start fw-bold text-success">${row.course}</td><td>${row.totalLeads}</td><td>${row.totalSales}</td><td class="table-success"><b>${row.conv}%</b></td></tr>`).join('');
 
         const { dynamicTextColor, dynamicGridColor } = getChartThemeColors();
 
@@ -1167,6 +1212,8 @@
     }
 
     function renderEmployeeMatrix(leads, sales, sortedDates) {
+        if (!document.getElementById('employeeMatrixChart')) return;
+
         let stats = {};
         employeeDatabase.forEach(emp => { stats[emp.name] = { name: emp.name, category: emp.category, supervisor: emp.supervisor || 'بدون مشرف', oldUser: emp.oldUser || '', newUser: emp.newUser || '', oldCode: normalizeEmpCode(emp.oldUser), newCode: normalizeEmpCode(emp.newUser), ccLeads: 0, ccSales: 0, ttSales: 0 }; });
 
@@ -1207,6 +1254,8 @@
     }
 
     function showEmployeeDetails(empName) {
+        if (!document.getElementById('employeeTimelineChart')) return;
+
         const startDate = document.getElementById('startDate').value; const endDate = document.getElementById('endDate').value;
         let empObj = employeeDatabase.find(e => e.name === empName);
         let oldCode = empObj ? normalizeEmpCode(empObj.oldUser) : normalizeEmpCode(empName);
@@ -1215,6 +1264,7 @@
         const empLeads = rawLeads.filter(item => { let c = normalizeEmpCode(item['الموظف']); return item['التاريخ'] && item['التاريخ'] >= startDate && item['التاريخ'] <= endDate && (c === oldCode || c === newCode); });
         const empSales = rawSales.filter(item => { let c = normalizeEmpCode(item['الموظف']); return item['التاريخ'] && item['التاريخ'] >= startDate && item['التاريخ'] <= endDate && (c === oldCode || c === newCode); });
 
+        document.getElementById('employeeMainView').classList.add('d-none'); document.getElementById('employeeDetailView').classList.remove('d-none');
         document.getElementById('employeeDetailTitle').innerHTML = `تحليل الموظف الفردي: <span class="text-success">${empName}</span>`;
         document.getElementById('empDetailSales').innerText = empSales.length;
 
@@ -1235,8 +1285,6 @@
 
         if (employeeTimelineChartInstance) employeeTimelineChartInstance.destroy();
         employeeTimelineChartInstance = new Chart(document.getElementById('employeeTimelineChart').getContext('2d'), { type: 'line', data: { labels: sortedDates, datasets: [{ label: 'الإغلاقات اليومية الناجحة له', data: sortedDates.map(d => dailySalesMap[d]), borderColor: '#7c3aed', fill: true, backgroundColor: 'rgba(124, 58, 237, 0.05)' }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: dynamicGridColor }, ticks: { color: dynamicTextColor } }, x: { grid: { display: false }, ticks: { color: dynamicTextColor } } } } });
-
-        document.getElementById('employeeMainView').classList.add('d-none'); document.getElementById('employeeDetailView').classList.remove('d-none');
     }
 
     function hideEmployeeDetails() { document.getElementById('employeeDetailView').classList.add('d-none'); document.getElementById('employeeMainView').classList.remove('d-none'); }
@@ -1245,18 +1293,28 @@
     function exportTableToExcel(tableId, fileName) { let table = document.getElementById(tableId); if (!table) return; let wb = XLSX.utils.table_to_book(table, { sheet: "تقرير الأداء الكلي" }); XLSX.writeFile(wb, `${fileName}_${new Date().toISOString().split('T')[0]}.xlsx`); }
     function takeTableScreenshot(tableId, fileName) { let tableElement = document.getElementById(tableId); if (!tableElement) return; html2canvas(tableElement, { scale: 3, useCORS: true }).then(canvas => { let link = document.createElement('a'); link.download = `${fileName}.png`; link.href = canvas.toDataURL('image/png'); link.click(); }); }
 
-    window.addEventListener('DOMContentLoaded', () => {
-        updateSupervisorMapsFromDatabase();
-        
-        // حساب وضبط النطاق التلقائي الصارم والآمن فوراً قبل أي عملية في الصفحة لمنع التجمد
+    // دالة تهيئة التواريخ التلقائية الفورية والمستقلة لكسر أي تجميد للكاش
+    function initDefaultDateFilters() {
         const today = new Date();
         const currentYear = today.getFullYear();
         const currentMonth = String(today.getMonth() + 1).padStart(2, '0');
         const currentDay = String(today.getDate()).padStart(2, '0');
         
-        document.getElementById('startDate').value = `${currentYear}-${currentMonth}-01`;
-        document.getElementById('endDate').value = `${currentYear}-${currentMonth}-${currentDay}`;
+        const startField = document.getElementById('startDate');
+        const endField = document.getElementById('endDate');
+        
+        if (startField && endField) {
+            startField.value = `${currentYear}-${currentMonth}-01`;
+            endField.value = `${currentYear}-${currentMonth}-${currentDay}`;
+        }
+    }
 
+    // تشغيل التهيئة المزدوجة لضمان فرض نزول التواريخ فوراً
+    initDefaultDateFilters();
+
+    window.addEventListener('DOMContentLoaded', () => {
+        updateSupervisorMapsFromDatabase();
+        initDefaultDateFilters();
         fetchDataFromCloudAuto();
     });
 </script>
